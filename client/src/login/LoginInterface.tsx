@@ -31,9 +31,11 @@ export default function LoginInterface({
 
   async function submit() {
     try {
+      var realCode = code.toLowerCase();
+
       setLocked(true);
 
-      var result: LoginResult = await emitAck("login", code);
+      var result: LoginResult = await emitAck("login", realCode);
 
       if (result.success) {
         switch (result.kind) {
@@ -42,7 +44,7 @@ export default function LoginInterface({
             setLoginState({
               kind: "player",
               id: result.player,
-              code,
+              code: realCode,
             });
 
             break;

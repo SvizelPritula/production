@@ -24,7 +24,10 @@ export default function App() {
   const [loginState, setLoginState] = useState<LoginState>({ kind: "none" });
 
   useEffect(() => {
-    const manager = new Manager("http://localhost:5000/", {
+    var url = new URL(window.location.toString());
+    url.port = "5000";
+
+    const manager = new Manager(url.toString(), {
       path: "/game"
     });
 
