@@ -12,13 +12,20 @@ const io = new Server({
     path: "/game",
     pingInterval: 10000,
     pingTimeout: 10000,
-    serveClient: false
+    serveClient: false,
+    cors: {
+        origin: "*"
+    }
 });
 
 const root = io.of("/");
 
 root.on("connection", (socket) => {
+    console.log("Connection");
+
     socket.on("login", (code: string, callback: (result: LoginResult) => void) => {
+        console.log("Login attempt");
+
         if (typeof code !== "string") {
             callback({ success: false, reason: "bad_payload" });
             return;
