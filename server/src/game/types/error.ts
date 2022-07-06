@@ -1,3 +1,3 @@
-export class ArgumentError extends Error {
-    name = "ArgumentError";
+export class UserError extends Error {
+    name = "UserError";
 }

@@ -3,12 +3,25 @@ import { LoginState } from "types/loginState";
 import Spinner from "utils/Spinner";
 import { useSocket } from "utils/useSocket";
 
+interface ErrorLoginResult {
+  success: false;
+  reason: "unknown_code" | "bad_code";
+}
+
+interface PlayerLoginResult {
+  success: true;
+  kind: "player";
+  player: string;
+}
+
+export type LoginResult = ErrorLoginResult | PlayerLoginResult;
+
 export default function LoginInterface({
   setLoginState,
 }: {
   setLoginState: (state: LoginState) => void;
 }) {
-  const { emitAck, connected } = useSocket("/", () => {});
+  const { emitAck, connected } = useSocket("/", () => {}, []);
 
   const [code, setCode] = useState("");
   const [locked, setLocked] = useState(false);
@@ -20,7 +33,7 @@ export default function LoginInterface({
     try {
       setLocked(true);
 
-      var result = await emitAck("login", code);
+      var result: LoginResult = await emitAck("login", code);
 
       if (result.success) {
         switch (result.kind) {
@@ -28,7 +41,7 @@ export default function LoginInterface({
             setError("none");
             setLoginState({
               kind: "player",
-              id: result.id,
+              id: result.player,
               code,
             });
 
@@ -37,7 +50,7 @@ export default function LoginInterface({
             throw new Error(`Unexpected login kind ${result.kind}`);
         }
       } else {
-        if (result.reason === "bad_code") {
+        if (result.reason === "unknown_code") {
           setError("bad_code");
         } else {
           throw new Error(`Unexpected rejection reason ${result.reason}`);

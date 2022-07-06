@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 
 import { Game } from "src/game/game";
 import { loginByCode, LoginResult } from "./login";
+import { registerRootNamespace } from "./namespaces/root";
 
 const game = new Game();
 const registry = game.registry;
@@ -18,23 +19,7 @@ const io = new Server({
     }
 });
 
-const root = io.of("/");
-
-root.on("connection", (socket) => {
-    console.log("Connection");
-
-    socket.on("login", (code: string, callback: (result: LoginResult) => void) => {
-        console.log("Login attempt");
-
-        if (typeof code !== "string") {
-            callback({ success: false, reason: "bad_payload" });
-            return;
-        }
-
-        var result = loginByCode(code, registry);
-        callback(result);
-    });
-});
+registerRootNamespace(io, game);
 
 io.attachApp(app);
 

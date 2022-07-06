@@ -1,6 +1,6 @@
 import { registry } from "src/game/registry";
 import { applyPassiveEffects } from "src/game/passive_effects";
-import { GameState, Player, Turn, Registry, getFirstTurn, ArgumentError, TurnResult, CardType, getNextTurn, isLastTurnInRound } from "src/game/types";
+import { GameState, Player, Turn, Registry, getFirstTurn, UserError, TurnResult, CardType, getNextTurn, isLastTurnInRound } from "src/game/types";
 import { calculateCardChoice } from "./card_choice";
 import { cardsInHand } from "./constants";
 
@@ -33,32 +33,38 @@ export class Game {
     }
 
     selectCardToPlay(player: Player | string, selection: number | null) {
+        if (this.turn.phase !== "card_usage")
+            throw new UserError("Cannot play cards in this turn phase");
+
         var playerObject = this.registry.getPlayer(player);
-        if (playerObject == null) throw new ArgumentError("No such player");
+        if (playerObject == null) throw new UserError("No such player");
 
         var playerState = this.state.getPlayer(playerObject)!;
 
         if (selection != null && !(selection >= 0 && selection < playerState.cards.length))
-            throw new ArgumentError("Card index out of range");
+            throw new UserError("Card index out of range");
 
         this.playSelection.set(playerObject, selection);
     }
 
     selectCardsToDraw(player: Player | string, selection: number[]) {
+        if (this.turn.phase !== "card_draw")
+            throw new UserError("Cannot draw in this turn phase");
+
         var playerObject = this.registry.getPlayer(player);
-        if (playerObject == null) throw new ArgumentError("No such player");
+        if (playerObject == null) throw new UserError("No such player");
 
         var cardChoices = this.getCardChoice(playerObject);
 
         if (selection.length != this.getCardDrawCount(playerObject))
-            throw new ArgumentError("Wrong amount of cards selected");
+            throw new UserError("Wrong amount of cards selected");
 
         if (selection.length != new Set(selection).size)
-            throw new ArgumentError("Duplicate cards selected");
+            throw new UserError("Duplicate cards selected");
 
         for (var number of selection) {
             if (!(number >= 0 && number < cardChoices.length))
-                throw new ArgumentError("Card selection out of range");
+                throw new UserError("Card selection out of range");
         }
 
         selection.sort((a, b) => a - b);
