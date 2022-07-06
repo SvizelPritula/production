@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoginState } from "types/loginState";
 import Spinner from "utils/Spinner";
 import { useSocket } from "utils/useSocket";
