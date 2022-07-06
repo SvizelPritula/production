@@ -1,29 +1,34 @@
+import { App } from "uWebSockets.js";
+import { Server } from "socket.io";
+
 import { Game } from "src/game/game";
+import { loginByCode, LoginResult } from "./login";
 
-var game = new Game();
+const game = new Game();
+const registry = game.registry;
 
-for (var playerState of game.state.players.values()) {
-    playerState.cards.push(game.registry.getCard("fireplace")!);
-    playerState.cards.push(game.registry.getCard("wood-shipment")!);
-    playerState.cards.push(game.registry.getCard("forest")!);
-    playerState.cards.push(game.registry.getCard("wood-boilder")!);
-}
+const app = App();
+const io = new Server({
+    path: "/game",
+    pingInterval: 10000,
+    pingTimeout: 10000,
+    serveClient: false
+});
 
-for (var i = 0; i < 8; i++) {
-    for (var [j, player] of game.registry.listPlayers().entries()) {
-        if (i % 2 == j % 2) {
-            game.selectCard(player, 0);
+const root = io.of("/");
+
+root.on("connection", (socket) => {
+    socket.on("login", (code: string, callback: (result: LoginResult) => void) => {
+        if (typeof code !== "string") {
+            callback({ success: false, reason: "bad_payload" });
+            return;
         }
-    }
 
-    game.evaluateTurn();
+        var result = loginByCode(code, registry);
+        callback(result);
+    });
+});
 
-    console.table([...game.state.players.entries()].map(([player, state]) => ({
-        player: player.name,
-        points: state.points,
-        amount: state.getResource("wood")?.amount,
-        production: state.getResource("wood")?.production,
-        usage: state.getResource("wood")?.usage,
-        cards: state.cards.length,
-    })));
-}
+io.attachApp(app);
+
+app.listen(5000, () => console.log("WebSocket server is listening"));

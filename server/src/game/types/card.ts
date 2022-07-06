@@ -1,4 +1,4 @@
-import { CardEffectContext } from "src/game/types/turn_result";
+import { CardEffectContext, GameState, Registry, Player, Turn } from "src/game/types";
 
 export interface CardType {
     readonly id: string;
@@ -6,4 +6,5 @@ export interface CardType {
     readonly description: string;
 
     readonly effect: (context: CardEffectContext) => void;
+    readonly chance: (state: GameState, turn: Turn, player: Player, registry: Registry) => number;
 }

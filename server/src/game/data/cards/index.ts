@@ -12,6 +12,9 @@ export const cards: CardType[] = [
                 },
             })
         },
+        chance(state, turn, player, registry) {
+            return 1;
+        },
     },
     {
         id: "forest",
@@ -23,6 +26,9 @@ export const cards: CardType[] = [
                     state.getPlayer(context.player)!.getResource("wood")!.production += 2;
                 },
             })
+        },
+        chance(state, turn, player, registry) {
+            return 1;
         },
     },
     {
@@ -36,6 +42,9 @@ export const cards: CardType[] = [
                 },
             })
         },
+        chance(state, turn, player, registry) {
+            return 1;
+        },
     },
     {
         id: "wood-boilder",
@@ -47,6 +56,9 @@ export const cards: CardType[] = [
                     state.getPlayer(context.player)!.getResource("wood")!.usage += 5;
                 },
             })
+        },
+        chance(state, turn, player, registry) {
+            return 1;
         },
     }
 ];

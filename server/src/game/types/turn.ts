@@ -1,3 +1,5 @@
+import { turnsInRound } from "../constants";
+
 interface CardDrawTurn {
     round: number;
     phase: "card_draw";
@@ -24,7 +26,7 @@ export function getNextTurn(previous_turn: Turn): Turn {
                 turn: 0
             }
         case "card_usage":
-            if (previous_turn.turn < 4) {
+            if (previous_turn.turn < turnsInRound - 1) {
                 return {
                     phase: "card_usage",
                     round: previous_turn.round,
@@ -37,4 +39,8 @@ export function getNextTurn(previous_turn: Turn): Turn {
                 }
             }
     }
+}
+
+export function isLastTurnInRound(turn: Turn) {
+    return turn.phase == "card_usage" && turn.turn == turnsInRound - 1;
 }
