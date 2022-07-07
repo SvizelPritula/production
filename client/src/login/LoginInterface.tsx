@@ -17,13 +17,12 @@ interface ErrorLoginResult {
   reason: "unknown_code" | "bad_code";
 }
 
-interface PlayerLoginResult {
+interface SuccessfulLoginResult {
   success: true;
-  kind: "player";
-  player: string;
+  kind: "player" | "admin";
 }
 
-export type LoginResult = ErrorLoginResult | PlayerLoginResult;
+export type LoginResult = ErrorLoginResult | SuccessfulLoginResult;
 
 interface EmitEvents {
   login: (code: string) => Promise<LoginResult>;
@@ -41,6 +40,7 @@ export default function LoginInterface({
 }) {
   const { emitAck, connected } = useSocket<ListenEvents, EmitEvents>(
     "/",
+    {},
     () => {},
     []
   );
@@ -66,7 +66,14 @@ export default function LoginInterface({
           case "player":
             setLoginState({
               kind: "player",
-              id: result.player,
+              code: realCode,
+            });
+
+            break;
+
+          case "admin":
+            setLoginState({
+              kind: "admin",
               code: realCode,
             });
 
@@ -110,7 +117,7 @@ export default function LoginInterface({
             <input
               id="code"
               className={`${formStyles.input} ${styles.input}`}
-              type={"text"}
+              type={"password"}
               autoComplete={"current-password"}
               disabled={locked}
               value={code}

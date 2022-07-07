@@ -6,16 +6,20 @@ import { Manager } from "socket.io-client";
 import { LoginState } from "types/loginState";
 import { ManagerContext } from "utils/ManagerContext";
 import Spinner from "components/Spinner";
+import AdminInterface from "admin/AdminInterface";
 
 function getMainComponent(
   state: LoginState,
-  setState: (state: LoginState) => void
+  setState: (state: LoginState) => void,
+  logout: () => void
 ) {
   switch (state.kind) {
     case "none":
-      return <LoginInterface setLoginState={setState}></LoginInterface>;
+      return <LoginInterface setLoginState={setState} />;
     case "player":
-      return <PlayerInterface loginState={state}></PlayerInterface>;
+      return <PlayerInterface loginState={state} />;
+    case "admin":
+      return <AdminInterface loginState={state} logout={logout} />;
   }
 }
 
@@ -28,7 +32,7 @@ export default function App() {
     url.port = "5000";
 
     const manager = new Manager(url.toString(), {
-      path: "/game"
+      path: "/game",
     });
 
     setManager(manager);
@@ -36,7 +40,13 @@ export default function App() {
 
   if (manager == null) return <Spinner />;
 
-  const mainComponent = getMainComponent(loginState, setLoginState);
+  function logout() {
+    setLoginState({
+      kind: "none",
+    });
+  }
+
+  const mainComponent = getMainComponent(loginState, setLoginState, logout);
 
   return (
     <ManagerContext.Provider value={manager}>

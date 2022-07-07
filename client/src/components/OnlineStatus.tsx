@@ -12,6 +12,7 @@ export default function OnlineStatus({ online }: { online: boolean }) {
           strokeWidth={5}
           stroke={online ? "#165016" : "#D40000"}
           strokeLinecap="round"
+          strokeLinejoin="round"
           fill="none"
           transform="rotate(-45,50,50)"
         >

@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 
 import { Game } from "src/game/game";
 import { registerRootNamespace } from "./namespaces/root";
+import { registerAdminNamespace } from "./namespaces/admin";
 
 const game = new Game();
 
@@ -18,6 +19,11 @@ const io = new Server({
 });
 
 registerRootNamespace(io, game);
+registerAdminNamespace(io, game);
+
+game.on("turn_change", () => {
+    console.log(game.state);
+});
 
 io.attachApp(app);
 

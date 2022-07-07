@@ -1,0 +1,7 @@
+.controls {
+    width: 100%;
+    max-width: 15cm;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}

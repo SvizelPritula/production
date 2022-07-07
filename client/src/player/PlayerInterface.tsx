@@ -1,16 +1,16 @@
 import { useContext } from "react";
 
-import { PlayerLoginState } from "types/loginState";
+import { SuccessfulLoginState } from "types/loginState";
 
 import { ManagerContext } from "utils/ManagerContext";
 
 export default function PlayerInterface({
   loginState,
 }: {
-  loginState: PlayerLoginState;
+  loginState: SuccessfulLoginState;
 }) {
   // eslint-disable-next-line
   var manager = useContext(ManagerContext);
 
-  return <>Hi {loginState.id}</>;
+  return <>Hi {loginState.code}</>;
 }

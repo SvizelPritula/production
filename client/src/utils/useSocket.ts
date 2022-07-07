@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
+import { Socket, SocketOptions } from "socket.io-client";
 
 import { ManagerContext } from "utils/ManagerContext";
 
@@ -33,6 +33,7 @@ export interface SocketHandle<ListenEvents, EmitEvents extends PromiseEventMap> 
 
 export function useSocket<ListenEvents, EmitEvents extends PromiseEventMap>(
   namespace: string,
+  options: Partial<SocketOptions>,
   attachEvents: (socket: Socket<ListenEvents, CallbackConvertedEventMap<EmitEvents>>) => void,
   deps: any[]
 ): SocketHandle<ListenEvents, EmitEvents> {
@@ -46,7 +47,7 @@ export function useSocket<ListenEvents, EmitEvents extends PromiseEventMap>(
   const attachEventsCallback = useCallback(attachEvents, deps);
 
   useEffect(() => {
-    var socket = manager!.socket(namespace);
+    var socket = manager!.socket(namespace, options);
     socket.connect();
     setSocket(socket);
 
@@ -59,7 +60,11 @@ export function useSocket<ListenEvents, EmitEvents extends PromiseEventMap>(
       socket.disconnect();
       setSocket(null);
     };
-  }, [manager, namespace, attachEventsCallback]);
+
+    // Cannot add options as a dependency, that would also keep disconnecting
+    // Option changes have to be reflected in the dependency array
+    // eslint-disable-next-line
+  }, [manager, namespace, attachEventsCallback, ...deps]);
 
   return {
     socket,

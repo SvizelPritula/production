@@ -1,10 +1,11 @@
+import EventEmitter from "events";
 import { registry } from "src/game/registry";
 import { applyPassiveEffects } from "src/game/passive_effects";
 import { GameState, Player, Turn, Registry, getFirstTurn, UserError, TurnResult, CardType, getNextTurn, isLastTurnInRound } from "src/game/types";
 import { calculateCardChoice } from "./card_choice";
 import { cardsInHand } from "./constants";
 
-export class Game {
+export class Game extends EventEmitter {
     readonly registry: Registry;
     readonly state: GameState;
     turn: Turn;
@@ -13,6 +14,8 @@ export class Game {
     drawSelection: Map<Player, number[] | null>;
 
     constructor() {
+        super();
+
         this.registry = registry;
 
         this.turn = getFirstTurn();
@@ -134,5 +137,14 @@ export class Game {
         this.playSelection = this.createEmptySelection();
         this.drawSelection = this.createEmptySelection();
         this.turn = getNextTurn(this.turn);
+
+        this.emit("turn");
+        this.emit("turn_change");
     }
+}
+
+export declare interface Game {
+    on(event: 'turn', listener: () => void): this;
+    on(event: 'turn_change', listener: () => void): this;
+    on(event: string, listener: Function): this;
 }

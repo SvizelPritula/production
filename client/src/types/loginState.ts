@@ -1,6 +1,5 @@
-export interface PlayerLoginState {
-    kind: "player",
-    id: string,
+export interface SuccessfulLoginState {
+    kind: "player" | "admin",
     code: string
 }
 
@@ -8,4 +7,4 @@ export interface NoLoginState {
     kind: "none"
 }
 
-export type LoginState = NoLoginState | PlayerLoginState;
+export type LoginState = NoLoginState | SuccessfulLoginState;

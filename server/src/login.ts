@@ -16,13 +16,24 @@ interface PlayerLoginResult {
     player: string;
 }
 
-export type LoginResult = UnknownLoginResult | BadPayloadResult | PlayerLoginResult;
+interface AdminLoginResult {
+    success: true;
+    kind: "admin";
+}
+
+export type LoginResult = UnknownLoginResult | BadPayloadResult | PlayerLoginResult | AdminLoginResult;
+
+const adminCode = "admin";
 
 export function loginByCode(code: string, registry: Registry): LoginResult {
     for (var player of registry.listPlayers()) {
         if (player.code == code) {
             return { success: true, kind: "player", player: player.id };
         }
+    }
+
+    if (code == adminCode) {
+        return { success: true, kind: "admin" };
     }
 
     return { success: false, reason: "unknown_code" };
