@@ -69,18 +69,11 @@ export function useSocket<ListenEvents, EmitEvents extends PromiseEventMap>(
     },
     emitAck(event, ...args) {
       return new Promise((resolve, reject) => {
-        var timeout: number | null = window.setTimeout(() => {
-          if (timeout != null) {
-            reject(new Error("Request timed out"));
-            timeout = null;
-          }
-        }, 10000);
-
-        (socket! as Socket).emit(event, ...args, (result: any) => {
-          if (timeout != null) {
+        (socket! as Socket).timeout(5000).emit(event, ...args, (error: any, result: any) => {
+          if (error != null) {
+            reject(error);
+          } else {
             resolve(result);
-            clearTimeout(timeout);
-            timeout = null;
           }
         });
       }) as any;

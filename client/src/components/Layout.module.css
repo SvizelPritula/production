@@ -9,7 +9,7 @@
 .layout header {
   background-color: #131313;
 
-  height: 1.5cm;
+  height: 4rem;
   padding: 5pt;
 
   display: flex;
@@ -28,6 +28,6 @@
 
 .heading {
   margin: auto 10pt;
-  font-size: 0.8cm;
+  font-size: 2rem;
   flex-grow: 1;
 }

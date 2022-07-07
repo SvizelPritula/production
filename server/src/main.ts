@@ -2,7 +2,6 @@ import { App } from "uWebSockets.js";
 import { Server } from "socket.io";
 
 import { Game } from "src/game/game";
-import { loginByCode, LoginResult } from "./login";
 import { registerRootNamespace } from "./namespaces/root";
 
 const game = new Game();
