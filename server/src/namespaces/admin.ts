@@ -16,7 +16,6 @@ export function registerAdminNamespace(server: Server, game: Game) {
 
     admin.use((socket, next) => {
         var code = socket.handshake.auth?.code;
-        console.log(socket.handshake.auth);
 
         if (typeof code === "string") {
             var result = loginByCode(code, registry);

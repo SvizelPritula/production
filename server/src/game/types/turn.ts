@@ -1,11 +1,11 @@
 import { turnsInRound } from "../constants";
 
-interface CardDrawTurn {
+export interface CardDrawTurn {
     round: number;
     phase: "card_draw";
 }
 
-interface CardUsageTurn {
+export interface CardUsageTurn {
     round: number;
     phase: "card_usage";
     turn: number;

@@ -3,7 +3,8 @@ export class LCG {
 
     static readonly multiplier: number = 69069;
     static readonly increment: number = 1;
-    static readonly modulus: number = 1 << 32;
+    static readonly modulus: number = 0x100000000;
+    static readonly maximum: number = 0x1000000;
 
     constructor(seed: number) {
         this.seed = (seed ^ LCG.multiplier) % LCG.modulus;
@@ -17,11 +18,16 @@ export class LCG {
         this.seed = (Math.imul(this.seed, LCG.multiplier) + LCG.increment) % LCG.modulus;
     }
 
+    private nextRaw(): number {
+        this.next();
+        return this.seed >>> 8;
+    }
+
     nextInt(): number;
     nextInt(end: number): number;
     nextInt(start?: number, end?: number): number {
         if (start == undefined && end == undefined) {
-            end = LCG.modulus;
+            end = LCG.maximum;
             start = 0;
         } else if (end == undefined) {
             end = start;
@@ -30,11 +36,13 @@ export class LCG {
 
         var max = end! - start!;
 
-        do {
-            this.next();
-        } while (this.seed >= LCG.multiplier - LCG.multiplier % max)
+        if (max > LCG.maximum) throw new Error(`Range cannot be larger than ${LCG.maximum}`)
 
-        return start! + this.seed % max;
+        do {
+            var result = this.nextRaw();
+        } while (this.seed >= LCG.maximum - LCG.maximum % max)
+
+        return start! + result % max;
     }
 
     nextChoice<T>(array: T[]): T {

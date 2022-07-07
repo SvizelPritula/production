@@ -1,5 +1,7 @@
-.label, .input, .button {
-    margin: 2mm 0;
+.label,
+.input,
+.button {
+  margin: 2mm 0;
 }
 
 .label {
@@ -33,7 +35,8 @@
   padding: 0.6rem;
 }
 
-.button:hover .button:focus {
+.button:hover,
+.button:focus {
   background-color: #0044aa;
 }
 

@@ -17,7 +17,7 @@ function getMainComponent(
     case "none":
       return <LoginInterface setLoginState={setState} />;
     case "player":
-      return <PlayerInterface loginState={state} />;
+      return <PlayerInterface loginState={state} logout={logout} />;
     case "admin":
       return <AdminInterface loginState={state} logout={logout} />;
   }

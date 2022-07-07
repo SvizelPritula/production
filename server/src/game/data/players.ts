@@ -4,21 +4,25 @@ export const players: Player[] = [
     {
         id: "red",
         name: "Red",
-        code: "red"
+        code: "red",
+        cardSeed: 0
     },
     {
         id: "green",
         name: "Green",
-        code: "green"
+        code: "green",
+        cardSeed: 1
     },
     {
         id: "blue",
         name: "Blue",
-        code: "blue"
+        code: "blue",
+        cardSeed: 2
     },
     {
         id: "yellow",
         name: "Yellow",
-        code: "yellow"
+        code: "yellow",
+        cardSeed: 3
     }
 ];

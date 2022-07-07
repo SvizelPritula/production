@@ -17,7 +17,6 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "dependencies": {
-    "socket.io": "^4.5.1",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.10.0"
+    "socket.io": "^4.5.1"
   }
 }

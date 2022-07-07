@@ -1,13 +1,12 @@
-import { App } from "uWebSockets.js";
 import { Server } from "socket.io";
 
 import { Game } from "src/game/game";
 import { registerRootNamespace } from "./namespaces/root";
 import { registerAdminNamespace } from "./namespaces/admin";
+import { registerPlayerNamespace } from "./namespaces/player";
 
 const game = new Game();
 
-const app = App();
 const io = new Server({
     path: "/game",
     pingInterval: 10000,
@@ -20,11 +19,10 @@ const io = new Server({
 
 registerRootNamespace(io, game);
 registerAdminNamespace(io, game);
+registerPlayerNamespace(io, game);
 
 game.on("turn_change", () => {
-    console.log(game.state);
+    console.log(game.turn);
 });
 
-io.attachApp(app);
-
-app.listen(5000, () => console.log("WebSocket server is listening"));
+io.listen(5000);

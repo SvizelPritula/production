@@ -3,4 +3,5 @@ export interface Player {
     readonly name: string;
 
     readonly code: string;
+    readonly cardSeed: number;
 }

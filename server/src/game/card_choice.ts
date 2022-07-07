@@ -3,7 +3,7 @@ import { cardChoiceSize } from "./constants";
 import { LCG } from "./lcg";
 
 export function calculateCardChoice(state: GameState, turn: Turn, player: Player, registry: Registry): CardType[] {
-    var random = new LCG(turn.round);
+    var random = new LCG(turn.round + player.cardSeed << 8);
 
     var weightedArray = registry.listCards()
         .map((card): [CardType, number] => [card, card.chance(state, turn, player, registry)])
