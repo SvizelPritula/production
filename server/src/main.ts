@@ -5,7 +5,6 @@ import { Game } from "src/game/game";
 import { registerRootNamespace } from "./namespaces/root";
 
 const game = new Game();
-const registry = game.registry;
 
 const app = App();
 const io = new Server({

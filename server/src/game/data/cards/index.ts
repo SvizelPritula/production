@@ -4,7 +4,7 @@ export const cards: CardType[] = [
     {
         id: "wood-shipment",
         name: "Wood shipment",
-        description: "Add 5 wood",
+        image: "a",
         effect(context) {
             context.addEffect({
                 apply(state: GameState, registry: Registry) {
@@ -19,7 +19,7 @@ export const cards: CardType[] = [
     {
         id: "forest",
         name: "Forest",
-        description: "Add 2 wood production",
+        image: "b",
         effect(context) {
             context.addEffect({
                 apply(state: GameState, registry: Registry) {
@@ -34,7 +34,7 @@ export const cards: CardType[] = [
     {
         id: "fireplace",
         name: "Fireplace",
-        description: "Add 1 wood generator",
+        image: "c",
         effect(context) {
             context.addEffect({
                 apply(state: GameState, registry: Registry) {
@@ -49,7 +49,7 @@ export const cards: CardType[] = [
     {
         id: "wood-boilder",
         name: "Wood boiler",
-        description: "Add 5 wood generators",
+        image: "d",
         effect(context) {
             context.addEffect({
                 apply(state: GameState, registry: Registry) {
