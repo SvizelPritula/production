@@ -1,5 +1,4 @@
 import { Namespace, Server } from "socket.io";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Game } from "src/game/game";
 import { loginByCode, LoginResult } from "src/login";
 
