@@ -5,7 +5,7 @@ import { Manager } from "socket.io-client";
 
 import { LoginState } from "types/loginState";
 import { ManagerContext } from "utils/ManagerContext";
-import Spinner from "utils/Spinner";
+import Spinner from "components/Spinner";
 
 function getMainComponent(
   state: LoginState,

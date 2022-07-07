@@ -1,0 +1,44 @@
+.label, .input, .button {
+    margin: 2mm 0;
+}
+
+.label {
+  font-size: 1.5rem;
+}
+
+.input {
+  font-size: 1rem;
+  background-color: #1e1e1e;
+  border: 2px solid #666;
+  border-radius: 2mm;
+  color: white;
+  padding: 0.75rem 0.5rem;
+}
+
+.input:focus {
+  background-color: #181818;
+}
+
+.button {
+  text-align: center;
+  font-size: 1.25rem;
+  background-color: #0055d4;
+  border: none;
+  border-radius: 2mm;
+  color: white;
+  padding: 0.6rem;
+}
+
+.button:hover .button:focus {
+  background-color: #0044aa;
+}
+
+.button:focus {
+  box-shadow: 0 0 0 0.25rem #003380;
+}
+
+.input:focus-visible,
+.button:focus-visible {
+  outline: white solid 3px;
+  outline-offset: 2px;
+}

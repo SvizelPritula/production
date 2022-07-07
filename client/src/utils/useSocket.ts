@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import { ManagerContext } from "./ManagerContext";
+
+import { ManagerContext } from "utils/ManagerContext";
 
 type PromiseType<T> = T extends Promise<infer X> ? X : never
 type FuncWithConcatedArguments<A extends [...args: any], B extends [...args: any]> = (...args: [...A, ...B]) => void;
