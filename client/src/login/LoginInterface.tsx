@@ -16,12 +16,25 @@ interface PlayerLoginResult {
 
 export type LoginResult = ErrorLoginResult | PlayerLoginResult;
 
+interface EmitEvents {
+  login: (code: string) => Promise<LoginResult>;
+  logAccess: (element: string) => void;
+}
+
+interface ListenEvents {
+  time: (time: number) => void;
+}
+
 export default function LoginInterface({
   setLoginState,
 }: {
   setLoginState: (state: LoginState) => void;
 }) {
-  const { emitAck, connected } = useSocket("/", () => {}, []);
+  const { emitAck, connected } = useSocket<ListenEvents, EmitEvents>(
+    "/",
+    () => {},
+    []
+  );
 
   const [code, setCode] = useState("");
   const [locked, setLocked] = useState(false);
@@ -35,7 +48,7 @@ export default function LoginInterface({
 
       setLocked(true);
 
-      var result: LoginResult = await emitAck("login", realCode);
+      var result = await emitAck("login", realCode);
 
       if (result.success) {
         switch (result.kind) {
