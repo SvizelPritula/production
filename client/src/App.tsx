@@ -1,6 +1,6 @@
 import LoginInterface from "login/LoginInterface";
 import PlayerInterface from "player/PlayerInterface";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Manager } from "socket.io-client";
 
 import { LoginState } from "types/loginState";
@@ -12,7 +12,7 @@ function getMainComponent(
   state: LoginState,
   setState: (state: LoginState) => void,
   logout: () => void
-) {
+): ReactNode {
   switch (state.kind) {
     case "none":
       return <LoginInterface setLoginState={setState} />;

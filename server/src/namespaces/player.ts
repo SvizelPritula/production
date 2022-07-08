@@ -3,6 +3,7 @@ import { ExtendedError } from "socket.io/dist/namespace";
 import { Game } from "src/game/game";
 import { Player, Turn, CardUsageTurn, CardDrawTurn, CardType } from "src/game/types";
 import { loginByCode } from "src/login";
+import { AssetStore } from "src/assets";
 
 interface CardInfo {
     image: string,
@@ -36,7 +37,7 @@ interface PlayerSocketData {
     player: string;
 }
 
-export function registerPlayerNamespace(server: Server, game: Game) {
+export function registerPlayerNamespace(server: Server, game: Game, assets: AssetStore) {
     const registry = game.registry;
 
     const player: Namespace<PlayerClientToServerEvents, PlayerServerToClientEvents, {}, PlayerSocketData> = server.of("/player");
@@ -78,7 +79,7 @@ export function registerPlayerNamespace(server: Server, game: Game) {
 
     function getCardInfo(card: CardType): CardInfo {
         return {
-            image: card.image
+            image: assets.getImage(card.image)
         }
     }
 

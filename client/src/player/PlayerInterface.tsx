@@ -1,22 +1,47 @@
 import { SuccessfulLoginState } from "types/loginState";
 import { useSocket } from "utils/useSocket";
 
+import { ShadowState, useShadowState } from "utils/useShadowState";
 import { useToasts } from "utils/useToasts";
 import { Toast, ToastType } from "types/toast";
 import { Player } from "player/playerData";
-import { TurnData } from "player/turnData";
+import { CardDrawTurnData, TurnData } from "player/turnData";
 
 import Toasts from "components/Toasts";
 import Layout from "components/Layout";
 import Overlay from "components/Overlay";
 import PlayerHeader from "player/PlayerHeader";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
+import CardDrawSelection from "./CardDrawSelection";
+import Spinner from "components/Spinner";
 
 interface EmitEvents {}
 
 interface ListenEvents {
   player_info: (info: Player) => void;
   turn_info: (info: TurnData) => void;
+}
+
+function getSelectionElements(
+  turnData: TurnData | null,
+  selection: ShadowState<number | null | number[]>,
+  saveSelection: () => Promise<void>
+): ReactNode {
+  if (turnData == null) {
+    return <Spinner />;
+  }
+
+  switch (turnData.turn.phase) {
+    case "card_draw":
+      return (
+        <CardDrawSelection
+          turnData={turnData as CardDrawTurnData}
+          shadowState={selection as ShadowState<number[]>}
+        />
+      );
+    default:
+      return <div>Other</div>;
+  }
 }
 
 export default function PlayerInterface({
@@ -28,6 +53,8 @@ export default function PlayerInterface({
 }) {
   const [player, setPlayer] = useState<Player | null>(null);
   const [turnData, setTurnData] = useState<TurnData | null>(null);
+
+  const shadowState = useShadowState<number | null | number[]>(null);
 
   const { connected } = useSocket<ListenEvents, EmitEvents>(
     "/player",
@@ -47,6 +74,17 @@ export default function PlayerInterface({
 
       socket.on("turn_info", (turn) => {
         setTurnData(turn);
+
+        switch (turn.turn.phase) {
+          case "card_draw":
+            shadowState.setMain([], true);
+            break;
+          case "card_usage":
+            shadowState.setMain(null, true);
+            break;
+          default:
+            shadowState.setMain(null, true);
+        }
       });
     },
     [loginState.code]
@@ -58,6 +96,10 @@ export default function PlayerInterface({
     addToast({ message, kind: ToastType.Error });
   }
 
+  async function saveSelection() {
+    console.log(shadowState.value);
+  }
+
   return (
     <Layout
       header={
@@ -65,9 +107,7 @@ export default function PlayerInterface({
       }
     >
       <Overlay>
-        <div>
-          <pre>{JSON.stringify(turnData, null, 2)}</pre>
-        </div>
+        {getSelectionElements(turnData, shadowState, saveSelection)}
         <Toasts toasts={toasts} />
       </Overlay>
     </Layout>

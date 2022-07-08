@@ -4,25 +4,30 @@ import { Game } from "src/game/game";
 import { registerRootNamespace } from "./namespaces/root";
 import { registerAdminNamespace } from "./namespaces/admin";
 import { registerPlayerNamespace } from "./namespaces/player";
+import { loadAssets } from "./assets";
 
-const game = new Game();
+(async () => {
+    const game = new Game();
 
-const io = new Server({
-    path: "/game",
-    pingInterval: 10000,
-    pingTimeout: 10000,
-    serveClient: false,
-    cors: {
-        origin: "*"
-    }
-});
+    const io = new Server({
+        path: "/game",
+        pingInterval: 10000,
+        pingTimeout: 10000,
+        serveClient: false,
+        cors: {
+            origin: "*"
+        }
+    });
 
-registerRootNamespace(io, game);
-registerAdminNamespace(io, game);
-registerPlayerNamespace(io, game);
+    const assets = await loadAssets();
 
-game.on("turn_change", () => {
-    console.log(game.turn);
-});
+    registerRootNamespace(io, game);
+    registerAdminNamespace(io, game);
+    registerPlayerNamespace(io, game, assets);
 
-io.listen(5000);
+    game.on("turn_change", () => {
+        console.log(game.turn);
+    });
+
+    io.listen(5000);
+})();
