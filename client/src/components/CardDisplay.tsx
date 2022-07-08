@@ -1,9 +1,20 @@
 import { Card } from "types/card";
 
-export default function CardDisplay({ card }: { card: Card }) {
+import styles from "components/CardDisplay.module.css";
+
+export default function CardDisplay({
+  card,
+  muted = false,
+}: {
+  card: Card;
+  muted?: boolean;
+}) {
   return (
-    <div>
-      <img src={card.image} style={{ height: "2cm" }} />
+    <div
+      className={`${styles.card} ${muted ? styles.muted : ""}`}
+      style={{ "--card-color": card.color } as any}
+    >
+      <img src={card.image} alt="A card" />
     </div>
   );
 }

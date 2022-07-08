@@ -1,0 +1,17 @@
+.card {
+  height: 100%;
+  width: fit-content;
+  background-color: white;
+  border-radius: 1.5rem;
+  padding: 0.5rem;
+}
+
+.card.muted {
+  background-color: #aaa;
+}
+
+.card img {
+  height: 100%;
+  border: 0.75rem solid var(--card-color);
+  border-radius: 1rem;
+}

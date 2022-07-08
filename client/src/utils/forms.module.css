@@ -1,7 +1,7 @@
 .label,
 .input,
 .button {
-  margin: 2mm 0;
+  margin: 0.5rem 0;
 }
 
 .label {
@@ -12,7 +12,7 @@
   font-size: 1rem;
   background-color: #111;
   border: 2px solid #666;
-  border-radius: 2mm;
+  border-radius: 0.5rem;
   color: white;
   padding: 0.75rem 0.5rem;
 }
@@ -30,7 +30,7 @@
   font-size: 1.25rem;
   background-color: #0055d4;
   border: none;
-  border-radius: 2mm;
+  border-radius: 0.5rem;
   color: white;
   padding: 0.6rem;
 }
@@ -48,8 +48,72 @@
   background-color: #444;
 }
 
+.checkbox,
+.radio {
+  appearance: none;
+  background-color: inherit;
+  margin: 0;
+
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid white;
+
+  display: grid;
+  place-content: center;
+}
+
+.checkbox {
+  border-radius: 0.25rem;
+}
+
+.radio {
+  border-radius: 2rem;
+}
+
+.checkbox:checked::before,
+.radio:checked::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  background-color: #0055d4;
+}
+
+.checkbox:checked::before {
+  border-radius: 0.1rem;
+}
+
+.radio:checked::before {
+  border-radius: 1rem;
+}
+
+.checkbox:hover,
+.radio:hover,
+.checkbox:focus,
+.radio:focus {
+  border-color: #aaa;
+}
+
+.checkbox:hover:checked::before,
+.radio:hover:checked::before,
+.checkbox:focus:checked::before,
+.radio:focus:checked::before {
+  background-color: #0044aa;
+}
+
+.checkbox:focus,
+.radio:focus {
+  background-color: #141414;
+}
+
+.checkbox:disabled,
+.radio:disabled {
+  border-color: #777;
+}
+
 .input:focus-visible,
-.button:focus-visible {
+.button:focus-visible,
+.checkbox:focus-visible,
+.radio:focus-visible {
   outline: white solid 3px;
   outline-offset: 2px;
 }

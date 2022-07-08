@@ -5,7 +5,7 @@ import { ShadowState, useShadowState } from "utils/useShadowState";
 import { useToasts } from "utils/useToasts";
 import { Toast, ToastType } from "types/toast";
 import { Player } from "player/playerData";
-import { CardDrawTurnData, TurnData } from "player/turnData";
+import { CardDrawTurnData, CardUsageTurnData, TurnData } from "player/turnData";
 
 import Toasts from "components/Toasts";
 import Layout from "components/Layout";
@@ -14,12 +14,19 @@ import PlayerHeader from "player/PlayerHeader";
 import { ReactNode, useState } from "react";
 import CardDrawSelection from "./CardDrawSelection";
 import Spinner from "components/Spinner";
+import { Turn } from "types/turn";
+import CardUsageSelection from "./CardUsageSelection";
 
-interface EmitEvents {}
+interface EmitEvents {
+  save_drawn_cards: (turn: Turn, selection: number[]) => Promise<void>;
+  save_used_card: (turn: Turn, selection: number | null) => Promise<void>;
+}
 
 interface ListenEvents {
   player_info: (info: Player) => void;
   turn_info: (info: TurnData) => void;
+  drawn_cards: (selection: number[]) => void;
+  used_card: (selection: number | null) => void;
 }
 
 function getSelectionElements(
@@ -37,10 +44,19 @@ function getSelectionElements(
         <CardDrawSelection
           turnData={turnData as CardDrawTurnData}
           shadowState={selection as ShadowState<number[]>}
+          saveSelection={saveSelection}
+        />
+      );
+    case "card_usage":
+      return (
+        <CardUsageSelection
+          turnData={turnData as CardUsageTurnData}
+          shadowState={selection as ShadowState<number | null>}
+          saveSelection={saveSelection}
         />
       );
     default:
-      return <div>Other</div>;
+      return <div>Unknown turn phase</div>;
   }
 }
 
@@ -56,7 +72,7 @@ export default function PlayerInterface({
 
   const shadowState = useShadowState<number | null | number[]>(null);
 
-  const { connected } = useSocket<ListenEvents, EmitEvents>(
+  const { emitAck, connected } = useSocket<ListenEvents, EmitEvents>(
     "/player",
     { auth: { code: loginState.code } },
     (socket) => {
@@ -86,6 +102,14 @@ export default function PlayerInterface({
             shadowState.setMain(null, true);
         }
       });
+
+      socket.on("drawn_cards", (selection) => {
+        shadowState.setMain(selection);
+      });
+
+      socket.on("used_card", (selection) => {
+        shadowState.setMain(selection);
+      });
     },
     [loginState.code]
   );
@@ -97,7 +121,32 @@ export default function PlayerInterface({
   }
 
   async function saveSelection() {
-    console.log(shadowState.value);
+    try {
+      var selection = shadowState.value;
+
+      switch (turnData?.turn.phase) {
+        case "card_draw":
+          await emitAck(
+            "save_drawn_cards",
+            turnData!.turn,
+            selection as number[]
+          );
+          break;
+
+        case "card_usage":
+          await emitAck(
+            "save_used_card",
+            turnData!.turn,
+            selection as number | null
+          );
+          break;
+      }
+
+      shadowState.setMain(selection, true);
+    } catch (error) {
+      console.error(error);
+      addError("Failed to save selection");
+    }
   }
 
   return (

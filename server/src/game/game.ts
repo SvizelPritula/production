@@ -44,10 +44,13 @@ export class Game extends EventEmitter {
 
         var playerState = this.state.getPlayer(playerObject)!;
 
-        if (selection != null && !(selection >= 0 && selection < playerState.cards.length))
+        var validKeys = Array.from(playerState.cards.keys());
+
+        if (selection != null && !validKeys.includes(selection))
             throw new UserError("Card index out of range");
 
         this.playSelection.set(playerObject, selection);
+        this.emit("play_selection", playerObject);
     }
 
     selectCardsToDraw(player: Player | string, selection: number[]) {
@@ -65,13 +68,17 @@ export class Game extends EventEmitter {
         if (selection.length != new Set(selection).size)
             throw new UserError("Duplicate cards selected");
 
+        var validKeys = new Set(cardChoices.keys());
+
         for (var number of selection) {
-            if (!(number >= 0 && number < cardChoices.length))
+            if (!validKeys.has(number))
                 throw new UserError("Card selection out of range");
         }
 
         selection.sort((a, b) => a - b);
         this.drawSelection.set(playerObject, selection);
+
+        this.emit("draw_selection", playerObject);
     }
 
     getCardChoice(player: Player): CardType[] {
@@ -109,6 +116,7 @@ export class Game extends EventEmitter {
                 }
 
                 turnResult.apply();
+                break;
 
             case "card_draw":
                 for (let player of this.registry.listPlayers()) {
@@ -128,6 +136,7 @@ export class Game extends EventEmitter {
                         this.state.getPlayer(player)!.cards.push(options[number]);
                     }
                 }
+                break;
         }
 
         if (isLastTurnInRound(this.turn)) {
@@ -146,5 +155,7 @@ export class Game extends EventEmitter {
 export declare interface Game {
     on(event: 'turn', listener: () => void): this;
     on(event: 'turn_change', listener: () => void): this;
+    on(event: 'play_selection', listener: (player: Player) => void): this;
+    on(event: 'draw_selection', listener: (player: Player) => void): this;
     on(event: string, listener: Function): this;
 }

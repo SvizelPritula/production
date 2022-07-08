@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { CardDrawTurnData } from "player/turnData";
+import { CardUsageTurnData } from "player/turnData";
+import { blankCard, Card } from "types/card";
 import { ShadowState } from "utils/useShadowState";
 
 import CardDisplay from "components/CardDisplay";
@@ -8,13 +9,13 @@ import CardDisplay from "components/CardDisplay";
 import styles from "player/selection.module.css";
 import formStyles from "utils/forms.module.css";
 
-export default function CardDrawSelection({
+export default function CardUsageSelection({
   turnData,
   shadowState,
   saveSelection,
 }: {
-  turnData: CardDrawTurnData;
-  shadowState: ShadowState<number[]>;
+  turnData: CardUsageTurnData;
+  shadowState: ShadowState<number | null>;
   saveSelection: () => Promise<void>;
 }) {
   var [locked, setLocked] = useState(false);
@@ -25,31 +26,30 @@ export default function CardDrawSelection({
     isShadowed: isSelectionShadowed,
   } = shadowState;
 
-  var selected = new Set(selection);
+  var cards = turnData.options
+    .map((card, id): { card: Card; id: number | null; selected: boolean } => ({
+      card: card,
+      id: id,
+      selected: selection === id,
+    }))
+    .concat([
+      {
+        card: blankCard,
+        id: null,
+        selected: selection === null,
+      },
+    ]);
 
-  var cards = turnData.options.map((card, id) => ({
-    card: card,
-    id: id,
-    selected: selected.has(id),
-  }));
+  var savingDisabledReason: string | null = isSelectionShadowed
+    ? null
+    : "Saved";
 
-  var savingDisabledReason: string | null = null;
-  var selectionsRemaining = turnData.requiredSelections - selection.length;
-
-  if (selectionsRemaining > 0) {
-    savingDisabledReason = `Select ${selectionsRemaining} more`;
-  } else if (selectionsRemaining < 0) {
-    savingDisabledReason = `Select ${-selectionsRemaining} less`;
-  } else if (!isSelectionShadowed) {
-    savingDisabledReason = `Saved`;
-  }
-
-  function setSelected(id: number, selected: boolean) {
-    setSelection((old) => {
-      var selection = old.filter((n) => n !== id);
-      if (selected) selection.push(id);
-      return selection;
-    });
+  function setSelected(value: string) {
+    if (value === "none") {
+      setSelection(null);
+    } else {
+      setSelection(parseInt(value, 10));
+    }
   }
 
   async function save() {
@@ -66,25 +66,25 @@ export default function CardDrawSelection({
         save();
       }}
     >
-      <p className={formStyles.label}>
-        Select <b>{turnData.requiredSelections}</b> cards:
-      </p>
+      <p className={formStyles.label}>Select a card:</p>
       <div className={styles.options}>
         {cards.map(({ card, id, selected }) => (
           <label
             className={styles.option}
             htmlFor={`card-${id}`}
-            aria-label={`Card number ${id + 1}`}
+            aria-label={id === null ? "Blank card" : `Card number ${id + 1}`}
             key={id}
           >
             <div>
               <input
-                className={formStyles.checkbox}
+                className={formStyles.radio}
                 id={`card-${id}`}
-                type={"checkbox"}
+                type={"radio"}
+                name="card"
+                value={id == null ? "none" : id.toString()}
                 disabled={locked}
                 checked={selected}
-                onChange={(event) => setSelected(id, event.target.checked)}
+                onChange={(event) => setSelected(event.target.value)}
               />
             </div>
             <div className={styles.card}>

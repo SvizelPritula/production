@@ -7,21 +7,43 @@ export interface ShadowState<T> {
     setShadow: (value: T | ((old: T) => T)) => void
 }
 
+interface InternalShadowState<T> {
+    main: T,
+    shadow: T,
+    isShadowed: boolean
+}
+
 export function useShadowState<T>(def: T): ShadowState<T> {
-    var [main, setMain] = useState<T>(def);
-    var [shadow, setShadow] = useState<T>(def);
-    var [isShadowed, setShadowed] = useState<boolean>(false);
+    var [values, setValues] = useState<InternalShadowState<T>>({ main: def, shadow: def, isShadowed: false });
+
+    var { main, shadow, isShadowed } = values;
 
     return {
         isShadowed: isShadowed,
         value: isShadowed ? shadow : main,
         setMain(value, clearShadow = false) {
-            setMain(value);
-            if (clearShadow) setShadowed(false);
+            setValues(old => {
+                var oldValue = old.isShadowed ? old.shadow : old.main;
+                var newValue = typeof value !== "function" ? value : (value as (old: T) => T)(oldValue);
+
+                return {
+                    main: newValue,
+                    shadow: old.shadow,
+                    isShadowed: clearShadow ? false : old.isShadowed
+                };
+            });
         },
         setShadow(value) {
-            setShadow(value);
-            setShadowed(true);
+            setValues(old => {
+                var oldValue = old.isShadowed ? old.shadow : old.main;
+                var newValue = typeof value !== "function" ? value : (value as (old: T) => T)(oldValue);
+
+                return {
+                    main: old.main,
+                    shadow: newValue,
+                    isShadowed: true
+                };
+            });
         },
     }
 }
