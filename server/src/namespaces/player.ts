@@ -4,34 +4,13 @@ import { Game } from "src/game/game";
 import { Player, Turn, CardUsageTurn, CardDrawTurn, CardType, UserError } from "src/game/types";
 import { loginByCode } from "src/login";
 import { AssetStore } from "src/assets";
-
-interface CardInfo {
-    image: string,
-    color: string
-}
-
-interface CardUsageTurnData {
-    turn: CardUsageTurn,
-    options: CardInfo[]
-}
-
-interface CardDrawTurnData {
-    turn: CardDrawTurn,
-    options: CardInfo[],
-    requiredSelections: number
-}
-
-interface PassiveTurnData {
-    turn: Turn
-}
-
-type TurnData = CardUsageTurnData | CardDrawTurnData | PassiveTurnData;
+import { serializeTurnOptions, TurnOptions } from "src/network_types";
 
 type TurnSaveError = null | "bad_turn" | "turn_mismatch" | "bad_payload" | "invalid_selection";
 
 interface PlayerServerToClientEvents {
     player_info: (info: { id: string, name: string }) => void,
-    turn_info: (info: TurnData) => void;
+    turn_info: (info: TurnOptions) => void;
     drawn_cards: (selection: number[]) => void;
     used_card: (selection: number | null) => void;
 }
@@ -74,9 +53,9 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         var playerObject = registry.getPlayer(socket.data.player!)!;
 
         socket.emit("player_info", { id: playerObject.id, name: playerObject.name });
-        socket.emit("turn_info", serializeTurnInfo(playerObject));
+        socket.emit("turn_info", serializeTurnOptions(playerObject, game, assets));
 
-        switch (game.turn.phase) {
+        switch (game.state.turn.phase) {
             case "card_draw":
                 socket.emit("drawn_cards", game.drawSelection.get(playerObject) ?? []);
                 break;
@@ -87,17 +66,19 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         }
 
         socket.on("save_drawn_cards", (turn, selection, callback) => {
+            var realTurn = game.state.turn;
+
             if (typeof turn !== "object" || turn == null) {
                 callback("bad_payload");
                 return;
             }
 
-            if (game.turn.phase !== "card_draw") {
+            if (realTurn.phase !== "card_draw") {
                 callback("bad_turn");
                 return;
             }
 
-            if (turn.phase !== "card_draw" || turn.round !== game.turn.round) {
+            if (turn.phase !== "card_draw" || turn.round !== realTurn.round) {
                 callback("turn_mismatch");
                 return;
             }
@@ -120,17 +101,19 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         });
 
         socket.on("save_used_card", (turn, selection, callback) => {
+            var realTurn = game.state.turn;
+
             if (typeof turn !== "object" || turn == null) {
                 callback("bad_payload");
                 return;
             }
 
-            if (game.turn.phase !== "card_usage") {
+            if (realTurn.phase !== "card_usage") {
                 callback("bad_turn");
                 return;
             }
 
-            if (turn.phase !== "card_usage" || turn.round !== game.turn.round || turn.turn !== game.turn.turn) {
+            if (turn.phase !== "card_usage" || turn.round !== realTurn.round || turn.turn !== realTurn.turn) {
                 callback("turn_mismatch");
                 return;
             }
@@ -155,7 +138,7 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
 
     game.on("turn_change", () => {
         for (var p of registry.listPlayers()) {
-            var turnData = serializeTurnInfo(p);
+            var turnData = serializeTurnOptions(p, game, assets);
 
             player.in(p.id).emit("turn_info", turnData);
         }
@@ -168,33 +151,4 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
     game.on("play_selection", (p) => {
         player.in(p.id).emit("used_card", game.playSelection.get(p)!);
     });
-
-    function getCardInfo(card: CardType): CardInfo {
-        return {
-            image: assets.getImage(card.image),
-            color: card.color
-        }
-    }
-
-    function serializeTurnInfo(player: Player): TurnData {
-        var turn = game.turn;
-
-        switch (turn.phase) {
-            case "card_draw":
-                return {
-                    turn: turn,
-                    options: game.getCardChoice(player).map(c => getCardInfo(c)),
-                    requiredSelections: game.getCardDrawCount(player)
-                }
-            case "card_usage":
-                return {
-                    turn: turn,
-                    options: game.state.getPlayer(player)!.cards.map(c => getCardInfo(c))
-                }
-            default:
-                return {
-                    turn: turn
-                }
-        }
-    }
 }

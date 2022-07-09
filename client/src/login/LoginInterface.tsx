@@ -19,7 +19,7 @@ interface ErrorLoginResult {
 
 interface SuccessfulLoginResult {
   success: true;
-  kind: "player" | "admin";
+  kind: "player" | "board" | "admin";
 }
 
 export type LoginResult = ErrorLoginResult | SuccessfulLoginResult;
@@ -66,6 +66,14 @@ export default function LoginInterface({
           case "player":
             setLoginState({
               kind: "player",
+              code: realCode,
+            });
+
+            break;
+
+          case "board":
+            setLoginState({
+              kind: "board",
               code: realCode,
             });
 

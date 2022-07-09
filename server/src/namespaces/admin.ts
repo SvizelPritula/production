@@ -1,7 +1,7 @@
 import { Namespace, Server } from "socket.io";
 import { ExtendedError } from "socket.io/dist/namespace";
 import { Game } from "src/game/game";
-import { loginByCode, LoginResult } from "src/login";
+import { loginByCode } from "src/login";
 
 interface AdminServerToClientEvents { }
 

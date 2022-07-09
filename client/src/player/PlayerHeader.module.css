@@ -1,0 +1,18 @@
+.heading {
+  margin: auto 10pt;
+  flex-grow: 1;
+}
+
+.turn {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: normal;
+}
+
+.turn b {
+  font-weight: bold;
+}
+
+.player {
+  font-size: 0.75rem;
+}

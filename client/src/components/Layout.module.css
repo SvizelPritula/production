@@ -10,7 +10,7 @@
   background-color: #131313;
 
   height: 4rem;
-  padding: 5pt;
+  padding: 0.4rem;
 
   flex-shrink: 0;
 
@@ -32,4 +32,9 @@
   margin: auto 10pt;
   font-size: 2rem;
   flex-grow: 1;
+  font-weight: normal;
+}
+
+.heading b {
+  font-weight: bold;
 }

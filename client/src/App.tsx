@@ -7,6 +7,7 @@ import { LoginState } from "types/loginState";
 import { ManagerContext } from "utils/ManagerContext";
 import Spinner from "components/Spinner";
 import AdminInterface from "admin/AdminInterface";
+import BoardInterface from "board/BoardInterface";
 
 function getMainComponent(
   state: LoginState,
@@ -18,6 +19,8 @@ function getMainComponent(
       return <LoginInterface setLoginState={setState} />;
     case "player":
       return <PlayerInterface loginState={state} logout={logout} />;
+    case "board":
+      return <BoardInterface loginState={state} logout={logout} />;
     case "admin":
       return <AdminInterface loginState={state} logout={logout} />;
   }

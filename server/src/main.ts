@@ -5,6 +5,7 @@ import { registerRootNamespace } from "./namespaces/root";
 import { registerAdminNamespace } from "./namespaces/admin";
 import { registerPlayerNamespace } from "./namespaces/player";
 import { loadAssets } from "./assets";
+import { registerBoardNamespace } from "./namespaces/board";
 
 (async () => {
     const game = new Game();
@@ -24,10 +25,7 @@ import { loadAssets } from "./assets";
     registerRootNamespace(io, game);
     registerAdminNamespace(io, game);
     registerPlayerNamespace(io, game, assets);
-
-    game.on("turn_change", () => {
-        console.log(game.turn);
-    });
+    registerBoardNamespace(io, game, assets);
 
     io.listen(5000);
 })();

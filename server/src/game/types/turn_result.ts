@@ -9,13 +9,11 @@ export interface GameStateChangeEffect {
 export class CardEffectContext {
     state: GameState;
     player: Player;
-    turn: Turn;
     private result: TurnResult;
 
-    constructor(state: GameState, player: Player, turn: Turn, result: TurnResult) {
+    constructor(state: GameState, player: Player, result: TurnResult) {
         this.state = state;
         this.player = player;
-        this.turn = turn;
         this.result = result;
     }
 
@@ -31,14 +29,12 @@ export class CardEffectContext {
 export class TurnResult {
     registry: Registry;
     target: GameState;
-    turn: Turn;
 
     scheduledChanges: GameStateChangeEffect[] = [];
 
-    constructor(target: GameState, turn: Turn, registry: Registry) {
+    constructor(target: GameState, registry: Registry) {
         this.registry = registry;
         this.target = target;
-        this.turn = turn;
     }
 
     apply() {
@@ -52,6 +48,6 @@ export class TurnResult {
     }
 
     createContext(player: Player): CardEffectContext {
-        return new CardEffectContext(this.target, player, this.turn, this);
+        return new CardEffectContext(this.target, player, this);
     }
 }

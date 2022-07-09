@@ -10,6 +10,7 @@ export class PlayerState {
     readonly resources: Map<Resource, ResourceQuantities>;
     cards: CardType[];
     points: number;
+    lastUsedCard: CardType | null;
 
     private readonly registry: Registry;
 
@@ -24,6 +25,7 @@ export class PlayerState {
 
         this.cards = [];
         this.points = 0;
+        this.lastUsedCard = null;
     }
 
     getResource(resource: Resource | string): ResourceQuantities | null {

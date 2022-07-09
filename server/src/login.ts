@@ -21,9 +21,15 @@ interface AdminLoginResult {
     kind: "admin";
 }
 
-export type LoginResult = UnknownLoginResult | BadPayloadResult | PlayerLoginResult | AdminLoginResult;
+interface BoardLoginResult {
+    success: true;
+    kind: "board";
+}
+
+export type LoginResult = UnknownLoginResult | BadPayloadResult | PlayerLoginResult | AdminLoginResult | BoardLoginResult;
 
 const adminCode = "admin";
+const boardCode = "board";
 
 export function loginByCode(code: string, registry: Registry): LoginResult {
     for (var player of registry.listPlayers()) {
@@ -34,6 +40,10 @@ export function loginByCode(code: string, registry: Registry): LoginResult {
 
     if (code == adminCode) {
         return { success: true, kind: "admin" };
+    }
+
+    if (code == boardCode) {
+        return { success: true, kind: "board" };
     }
 
     return { success: false, reason: "unknown_code" };

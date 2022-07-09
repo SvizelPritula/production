@@ -13,7 +13,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     },
@@ -29,7 +29,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     },
@@ -45,7 +45,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     },
@@ -61,7 +61,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     },
@@ -77,7 +77,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     },
@@ -93,7 +93,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     },
@@ -109,7 +109,7 @@ export const cards: CardType[] = [
                 },
             })
         },
-        chance(state, turn, player, registry) {
+        chance(state, player, registry) {
             return 3;
         },
     }

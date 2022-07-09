@@ -8,5 +8,5 @@ export interface CardType {
     readonly color: string;
 
     readonly effect: (context: CardEffectContext) => void;
-    readonly chance: (state: GameState, turn: Turn, player: Player, registry: Registry) => number;
+    readonly chance: (state: GameState, player: Player, registry: Registry) => number;
 }

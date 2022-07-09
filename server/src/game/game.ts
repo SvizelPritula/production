@@ -8,7 +8,6 @@ import { cardsInHand } from "./constants";
 export class Game extends EventEmitter {
     readonly registry: Registry;
     readonly state: GameState;
-    turn: Turn;
 
     playSelection: Map<Player, number | null>;
     drawSelection: Map<Player, number[] | null>;
@@ -18,7 +17,6 @@ export class Game extends EventEmitter {
 
         this.registry = registry;
 
-        this.turn = getFirstTurn();
         this.state = new GameState(this.registry);
 
         this.playSelection = this.createEmptySelection();
@@ -36,7 +34,7 @@ export class Game extends EventEmitter {
     }
 
     selectCardToPlay(player: Player | string, selection: number | null) {
-        if (this.turn.phase !== "card_usage")
+        if (this.state.turn.phase !== "card_usage")
             throw new UserError("Cannot play cards in this turn phase");
 
         var playerObject = this.registry.getPlayer(player);
@@ -54,7 +52,7 @@ export class Game extends EventEmitter {
     }
 
     selectCardsToDraw(player: Player | string, selection: number[]) {
-        if (this.turn.phase !== "card_draw")
+        if (this.state.turn.phase !== "card_draw")
             throw new UserError("Cannot draw in this turn phase");
 
         var playerObject = this.registry.getPlayer(player);
@@ -82,7 +80,7 @@ export class Game extends EventEmitter {
     }
 
     getCardChoice(player: Player): CardType[] {
-        return calculateCardChoice(this.state, this.turn, player, this.registry);
+        return calculateCardChoice(this.state, player, this.registry);
     }
 
     getCardDrawCount(player: Player): number {
@@ -90,9 +88,9 @@ export class Game extends EventEmitter {
     }
 
     evaluateTurn() {
-        switch (this.turn.phase) {
+        switch (this.state.turn.phase) {
             case "card_usage":
-                let turnResult = new TurnResult(this.state, this.turn, this.registry);
+                let turnResult = new TurnResult(this.state, this.registry);
                 let cardTypes: Map<Player, CardType> = new Map();
 
                 for (let player of this.registry.listPlayers()) {
@@ -108,7 +106,9 @@ export class Game extends EventEmitter {
                 }
 
                 for (let player of this.registry.listPlayers()) {
-                    let cardType = cardTypes.get(player);
+                    let cardType = cardTypes.get(player) ?? null;
+
+                    this.state.getPlayer(player)!.lastUsedCard = cardType;
 
                     if (cardType != null) {
                         cardType.effect(turnResult.createContext(player));
@@ -139,13 +139,13 @@ export class Game extends EventEmitter {
                 break;
         }
 
-        if (isLastTurnInRound(this.turn)) {
+        if (isLastTurnInRound(this.state.turn)) {
             applyPassiveEffects(this.state, this.registry);
         }
 
         this.playSelection = this.createEmptySelection();
         this.drawSelection = this.createEmptySelection();
-        this.turn = getNextTurn(this.turn);
+        this.state.turn = getNextTurn(this.state.turn);
 
         this.emit("turn");
         this.emit("turn_change");

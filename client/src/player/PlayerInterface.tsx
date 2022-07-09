@@ -152,7 +152,12 @@ export default function PlayerInterface({
   return (
     <Layout
       header={
-        <PlayerHeader player={player} online={connected} logout={logout} />
+        <PlayerHeader
+          player={player}
+          turn={turnData?.turn ?? null}
+          online={connected}
+          logout={logout}
+        />
       }
     >
       <Overlay>

@@ -1,5 +1,5 @@
 export interface SuccessfulLoginState {
-    kind: "player" | "admin",
+    kind: "player" | "board" | "admin",
     code: string
 }
 
