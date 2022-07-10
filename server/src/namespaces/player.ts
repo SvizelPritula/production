@@ -27,9 +27,9 @@ interface PlayerSocketData {
 export function registerPlayerNamespace(server: Server, game: Game, assets: AssetStore) {
     const registry = game.registry;
 
-    const player: Namespace<PlayerClientToServerEvents, PlayerServerToClientEvents, {}, PlayerSocketData> = server.of("/player");
+    const playerNamespace: Namespace<PlayerClientToServerEvents, PlayerServerToClientEvents, {}, PlayerSocketData> = server.of("/player");
 
-    player.use((socket, next) => {
+    playerNamespace.use((socket, next) => {
         var code = socket.handshake.auth?.code;
 
         if (typeof code === "string") {
@@ -49,7 +49,7 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         next(error);
     });
 
-    player.on("connection", socket => {
+    playerNamespace.on("connection", socket => {
         var playerObject = registry.getPlayer(socket.data.player!)!;
 
         socket.emit("player_info", { id: playerObject.id, name: playerObject.name });
@@ -66,6 +66,9 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         }
 
         socket.on("save_drawn_cards", (turn, selection, callback) => {
+            if (typeof callback !== "function")
+                return;
+                
             var realTurn = game.state.turn;
 
             if (typeof turn !== "object" || turn == null) {
@@ -101,6 +104,9 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         });
 
         socket.on("save_used_card", (turn, selection, callback) => {
+            if (typeof callback !== "function")
+                return;
+
             var realTurn = game.state.turn;
 
             if (typeof turn !== "object" || turn == null) {
@@ -140,15 +146,17 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         for (var p of registry.listPlayers()) {
             var turnData = serializeTurnOptions(p, game, assets);
 
-            player.in(p.id).emit("turn_info", turnData);
+            playerNamespace.in(p.id).emit("turn_info", turnData);
         }
     });
 
-    game.on("draw_selection", (p) => {
-        player.in(p.id).emit("drawn_cards", game.drawSelection.get(p) ?? []);
+    game.on("draw_selection_change", (player, selection, isTurnChange) => {
+        if (!isTurnChange)
+            playerNamespace.in(player.id).emit("drawn_cards", game.drawSelection.get(player) ?? []);
     });
 
-    game.on("play_selection", (p) => {
-        player.in(p.id).emit("used_card", game.playSelection.get(p)!);
+    game.on("play_selection_change", (player, selection, isTurnChange) => {
+        if (!isTurnChange)
+            playerNamespace.in(player.id).emit("used_card", game.playSelection.get(player)!);
     });
 }

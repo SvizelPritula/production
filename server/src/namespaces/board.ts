@@ -15,9 +15,9 @@ interface BoardClientToServerEvents { }
 export function registerBoardNamespace(server: Server, game: Game, assets: AssetStore) {
     const registry = game.registry;
 
-    const board: Namespace<BoardClientToServerEvents, BoardServerToClientEvents, {}, {}> = server.of("/board");
+    const boardNamespace: Namespace<BoardClientToServerEvents, BoardServerToClientEvents, {}, {}> = server.of("/board");
 
-    board.use((socket, next) => {
+    boardNamespace.use((socket, next) => {
         var code = socket.handshake.auth?.code;
 
         if (typeof code === "string") {
@@ -34,11 +34,11 @@ export function registerBoardNamespace(server: Server, game: Game, assets: Asset
         next(error);
     });
 
-    board.on("connection", socket => {
+    boardNamespace.on("connection", socket => {
         socket.emit("state", serializePublicGameState(game, assets));
     });
 
     game.on("turn_change", () => {
-        board.emit("state", serializePublicGameState(game, assets));
+        boardNamespace.emit("state", serializePublicGameState(game, assets));
     });
 }

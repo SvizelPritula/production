@@ -6,6 +6,9 @@ import { registerAdminNamespace } from "./namespaces/admin";
 import { registerPlayerNamespace } from "./namespaces/player";
 import { loadAssets } from "./assets";
 import { registerBoardNamespace } from "./namespaces/board";
+import { Clock } from "./clock";
+import { ClockManager } from "./clock_manager";
+import { registerClockNamespace } from "./namespaces/clock";
 
 (async () => {
     const game = new Game();
@@ -22,10 +25,25 @@ import { registerBoardNamespace } from "./namespaces/board";
 
     const assets = await loadAssets();
 
+    const clock = new Clock();
+    const clockManager = new ClockManager();
+
     registerRootNamespace(io, game);
-    registerAdminNamespace(io, game);
+    registerAdminNamespace(io, game, clock, clockManager);
     registerPlayerNamespace(io, game, assets);
     registerBoardNamespace(io, game, assets);
+    registerClockNamespace(io, clock);
+
+    clock.on("alarm", () => {
+        game.evaluateTurn();
+    })
+
+    game.on("turn", ({ turn }) => {
+        var newTime = clockManager.getTurnDuration(turn);
+
+        if (newTime != null)
+            clock.start(newTime);
+    });
 
     io.listen(5000);
 })();

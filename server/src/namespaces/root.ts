@@ -11,11 +11,14 @@ interface RootClientToServerEvents {
 export function registerRootNamespace(server: Server, game: Game) {
     const registry = game.registry;
 
-    const root: Namespace<RootClientToServerEvents, RootServerToClientEvents, {}, {}> = server.of("/");
+    const rootNamespace: Namespace<RootClientToServerEvents, RootServerToClientEvents, {}, {}> = server.of("/");
 
-    root.on("connection", (socket) => {
+    rootNamespace.on("connection", (socket) => {
         socket.on("login", (code, callback) => {
-            if (typeof code !== "string" || typeof callback !== "function") {
+            if (typeof callback !== "function")
+                return;
+
+            if (typeof code !== "string") {
                 callback({ success: false, reason: "bad_payload" });
                 return;
             }

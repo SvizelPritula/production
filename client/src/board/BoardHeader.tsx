@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { Turn } from "types/turn";
 
 import OnlineStatus from "components/OnlineStatus";
+import Timer from "components/Timer";
 
 import headerStyles from "components/Layout.module.css";
 
@@ -39,6 +40,7 @@ export default function BoardHeader({
   return (
     <>
       <h1 className={headerStyles.heading}>{getTurnName(turn)}</h1>
+      <Timer />
       <OnlineStatus online={online} />
     </>
   );

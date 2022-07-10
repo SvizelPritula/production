@@ -48,7 +48,7 @@ export class Game extends EventEmitter {
             throw new UserError("Card index out of range");
 
         this.playSelection.set(playerObject, selection);
-        this.emit("play_selection", playerObject);
+        this.emit("play_selection_change", playerObject, selection, false);
     }
 
     selectCardsToDraw(player: Player | string, selection: number[]) {
@@ -76,7 +76,7 @@ export class Game extends EventEmitter {
         selection.sort((a, b) => a - b);
         this.drawSelection.set(playerObject, selection);
 
-        this.emit("draw_selection", playerObject);
+        this.emit("draw_selection_change", playerObject, selection, false);
     }
 
     getCardChoice(player: Player): CardType[] {
@@ -147,15 +147,29 @@ export class Game extends EventEmitter {
         this.drawSelection = this.createEmptySelection();
         this.state.turn = getNextTurn(this.state.turn);
 
-        this.emit("turn");
-        this.emit("turn_change");
+        this.emit("turn", this.state);
+        this.emit("turn_change", this.state);
+
+        for (var player of registry.listPlayers()) {
+            this.emit("play_selection_change", player, null, true);
+            this.emit("draw_selection_change", player, [], true);
+        }
     }
 }
 
+interface ClockEvents {
+    'turn': (state: GameState) => void;
+    'turn_change': (state: GameState) => void;
+    'play_selection_change': (player: Player, selection: number | null, isTurnChange: boolean) => void;
+    'draw_selection_change': (player: Player, selection: number[], isTurnChange: boolean) => void;
+}
+
 export declare interface Game {
-    on(event: 'turn', listener: () => void): this;
-    on(event: 'turn_change', listener: () => void): this;
-    on(event: 'play_selection', listener: (player: Player) => void): this;
-    on(event: 'draw_selection', listener: (player: Player) => void): this;
-    on(event: string, listener: Function): this;
+    on<U extends keyof ClockEvents>(
+        event: U, listener: ClockEvents[U]
+    ): this;
+
+    emit<U extends keyof ClockEvents>(
+        event: U, ...args: Parameters<ClockEvents[U]>
+    ): boolean;
 }
