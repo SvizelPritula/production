@@ -1,5 +1,8 @@
+import { useEffect, useRef, useState } from "react";
+
 import styles from "components/Timer.module.css";
-import { useEffect, useState } from "react";
+
+import { ClockAdjuster } from "utils/clockAdjuster";
 import { useSocket } from "utils/useSocket";
 
 export interface RunningClockState {
@@ -30,24 +33,66 @@ interface EmitEvents {
 }
 
 export default function Timer() {
-  const [time, setTime] = useState<number>(() => Date.now());
+  const [clockAdjuster] = useState<ClockAdjuster>(() => new ClockAdjuster());
 
-  const [clockState, setClockState] = useState<ClockState>({
+  const [seconds, setSeconds] = useState<number | null>(null);
+
+  const clockStateRef = useRef<ClockState>({
     state: "suspended",
   });
 
   useSocket<ListenEvents, EmitEvents>(
     "/clock",
     {},
-    (socket) => {
-      socket.on("state", (state) => setClockState(state));
+    (socket, emit, emitAck) => {
+      socket.on("state", (state) => {
+        clockStateRef.current = state;
+      });
+
+      async function checkServerTime() {
+        try {
+          const start = Date.now();
+          const server = await emitAck("get_time");
+          const end = Date.now();
+
+          const client = Math.floor((start + end) / 2);
+          const skew = server - client;
+
+          clockAdjuster.recordSkew(skew);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      const interval = setInterval(checkServerTime, 1000);
+      checkServerTime();
+
+      return () => clearInterval(interval);
     },
     []
   );
 
   useEffect(() => {
     function callback() {
-      setTime(() => Date.now());
+      const clockState = clockStateRef.current;
+
+      if (clockState.state !== "suspended") {
+        var time = clockAdjuster.getTime();
+
+        var remainingTime =
+          clockState.state === "running"
+            ? clockState.time - time
+            : clockState.remaining;
+
+        remainingTime = Math.max(remainingTime, 0);
+
+        var milliseconds = remainingTime;
+        var seconds = Math.floor(milliseconds / 1000);
+
+        setSeconds(seconds);
+      } else {
+        setSeconds(null);
+      }
 
       animationFrame = requestAnimationFrame(callback);
     }
@@ -56,24 +101,16 @@ export default function Timer() {
     return () => cancelAnimationFrame(animationFrame);
   });
 
-  if (clockState.state === "suspended") return null;
+  if (seconds == null) return null;
 
-  var remainingTime =
-    clockState.state === "running"
-      ? clockState.time - time
-      : clockState.remaining;
-  remainingTime = Math.max(remainingTime, 0);
+  const minutes = Math.floor(seconds / 60);
 
-  var milliseconds = remainingTime;
-  var seconds = Math.floor(milliseconds / 1000);
-  var minutes = Math.floor(seconds / 60);
-
-  seconds %= 60;
+  const minutesString = minutes.toString().padStart(2, "0");
+  const secondsString = (seconds % 60).toString().padStart(2, "0");
 
   return (
     <div className={styles.timer}>
-      {minutes.toString().padStart(2, "0")}:
-      {seconds.toString().padStart(2, "0")}
+      {minutesString}:{secondsString}
     </div>
   );
 }

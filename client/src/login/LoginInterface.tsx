@@ -26,12 +26,9 @@ export type LoginResult = ErrorLoginResult | SuccessfulLoginResult;
 
 interface EmitEvents {
   login: (code: string) => Promise<LoginResult>;
-  logAccess: (element: string) => void;
 }
 
-interface ListenEvents {
-  time: (time: number) => void;
-}
+interface ListenEvents {}
 
 export default function LoginInterface({
   setLoginState,
