@@ -1,21 +1,22 @@
+import { ReactNode, useState } from "react";
+
 import { SuccessfulLoginState } from "types/loginState";
 import { useSocket } from "utils/useSocket";
-
 import { ShadowState, useShadowState } from "utils/useShadowState";
 import { useToasts } from "utils/useToasts";
 import { Toast, ToastType } from "types/toast";
+import { Turn } from "types/turn";
 import { Player } from "player/playerData";
 import { CardDrawTurnData, CardUsageTurnData, TurnData } from "player/turnData";
 
 import Toasts from "components/Toasts";
 import Layout from "components/Layout";
 import Overlay from "components/Overlay";
-import PlayerHeader from "player/PlayerHeader";
-import { ReactNode, useState } from "react";
-import CardDrawSelection from "./CardDrawSelection";
 import Spinner from "components/Spinner";
-import { Turn } from "types/turn";
-import CardUsageSelection from "./CardUsageSelection";
+import PlayerHeader from "player/PlayerHeader";
+import CardDrawSelection from "player/CardDrawSelection";
+import CardUsageSelection from "player/CardUsageSelection";
+import InfoText from "player/InfoText";
 
 interface EmitEvents {
   save_drawn_cards: (turn: Turn, selection: number[]) => Promise<void>;
@@ -55,8 +56,12 @@ function getSelectionElements(
           saveSelection={saveSelection}
         />
       );
+    case "before_game":
+      return <InfoText>Please wait for game start.</InfoText>;
+    case "after_game":
+      return <InfoText>Good job!</InfoText>;
     default:
-      return <div>Unknown turn phase</div>;
+      return <InfoText>Unknown turn phase</InfoText>;
   }
 }
 

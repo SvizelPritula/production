@@ -25,6 +25,12 @@ function getTurnName(turn: Turn | null): ReactNode {
         </>
       );
 
+    case "before_game":
+      return <>Waiting for game start&#x2026;</>;
+
+    case "after_game":
+      return <>Game evaluation</>;
+
     default:
       return "Unknown turn phase";
   }
