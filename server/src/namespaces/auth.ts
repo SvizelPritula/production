@@ -2,18 +2,18 @@ import { Namespace, Server } from "socket.io";
 import { Game } from "src/game/game";
 import { loginByCode, LoginResult } from "src/login";
 
-interface RootServerToClientEvents {}
+interface AuthServerToClientEvents { }
 
-interface RootClientToServerEvents {
+interface AuthClientToServerEvents {
     login: (code: string, callback: (result: LoginResult) => void) => void;
 }
 
-export function registerRootNamespace(server: Server, game: Game) {
+export function registerAuthNamespace(server: Server, game: Game) {
     const registry = game.registry;
 
-    const rootNamespace: Namespace<RootClientToServerEvents, RootServerToClientEvents, {}, {}> = server.of("/");
+    const authNamespace: Namespace<AuthClientToServerEvents, AuthServerToClientEvents, {}, {}> = server.of("/auth");
 
-    rootNamespace.on("connection", (socket) => {
+    authNamespace.on("connection", (socket) => {
         socket.on("login", (code, callback) => {
             if (typeof callback !== "function")
                 return;

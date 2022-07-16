@@ -76,7 +76,7 @@ export default function Timer() {
     function callback() {
       const clockState = clockStateRef.current;
 
-      if (clockState.state !== "suspended") {
+      if (clockState.state !== "suspended" && clockAdjuster.hasSkewData()) {
         var time = clockAdjuster.getTime();
 
         var remainingTime =

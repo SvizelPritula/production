@@ -5,6 +5,7 @@ import { Player, Turn, CardUsageTurn, CardDrawTurn, CardType, UserError } from "
 import { loginByCode } from "src/login";
 import { AssetStore } from "src/assets";
 import { serializeTurnOptions, TurnOptions } from "src/network_types";
+import { isInt, isObject } from "src/assert";
 
 type TurnSaveError = null | "bad_turn" | "turn_mismatch" | "bad_payload" | "invalid_selection";
 
@@ -68,10 +69,10 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
         socket.on("save_drawn_cards", (turn, selection, callback) => {
             if (typeof callback !== "function")
                 return;
-                
+
             var realTurn = game.state.turn;
 
-            if (typeof turn !== "object" || turn == null) {
+            if (!isObject(turn)) {
                 callback("bad_payload");
                 return;
             }
@@ -109,7 +110,7 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
 
             var realTurn = game.state.turn;
 
-            if (typeof turn !== "object" || turn == null) {
+            if (!isObject(turn)) {
                 callback("bad_payload");
                 return;
             }
@@ -124,7 +125,7 @@ export function registerPlayerNamespace(server: Server, game: Game, assets: Asse
                 return;
             }
 
-            if (typeof selection !== "number" && selection !== null) {
+            if (!isInt(selection) && selection !== null) {
                 callback("bad_payload");
                 return;
             }

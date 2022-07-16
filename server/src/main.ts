@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 
 import { Game } from "src/game/game";
-import { registerRootNamespace } from "./namespaces/root";
+import { registerAuthNamespace } from "./namespaces/auth";
 import { registerAdminNamespace } from "./namespaces/admin";
 import { registerPlayerNamespace } from "./namespaces/player";
 import { loadAssets } from "./assets";
@@ -28,7 +28,7 @@ import { registerClockNamespace } from "./namespaces/clock";
     const clock = new Clock();
     const clockManager = new ClockManager();
 
-    registerRootNamespace(io, game);
+    registerAuthNamespace(io, game);
     registerAdminNamespace(io, game, clock, clockManager);
     registerPlayerNamespace(io, game, assets);
     registerBoardNamespace(io, game, assets);

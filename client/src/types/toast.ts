@@ -1,5 +1,6 @@
 export enum ToastType {
-    Error
+    Error,
+    Success
 }
 
 export interface Toast {

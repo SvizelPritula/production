@@ -1,5 +1,6 @@
 import { Namespace, Server } from "socket.io";
 import { ExtendedError } from "socket.io/dist/namespace";
+import { isInt, isObject, isReal } from "src/assert";
 import { Clock } from "src/clock";
 import { ClockManager } from "src/clock_manager";
 import { Game } from "src/game/game";
@@ -17,16 +18,30 @@ interface ErrorResult {
 
 type Result = OkResult | ErrorResult;
 
+type Callback = (error: Result) => void;
+
+interface ClockManagerTimings {
+    timeForTurn: number;
+    timeForCardDraw: number;
+    specialTurnMultiplier: number;
+}
+
 interface AdminServerToClientEvents { }
 
 interface AdminClientToServerEvents {
-    advance_turn: (callback: (error: Result) => void) => void;
-    set_time: (time: number, callback: (error: Result) => void) => void;
-    add_time: (time: number, callback: (error: Result) => void) => void;
-    start: (time: number, callback: (error: Result) => void) => void;
-    suspend: (callback: (error: Result) => void) => void;
-    pause: (callback: (error: Result) => void) => void;
-    resume: (callback: (error: Result) => void) => void;
+    advance_turn: (callback: Callback) => void;
+
+    // Clock management
+    set_time: (time: number, callback: Callback) => void;
+    add_time: (time: number, callback: Callback) => void;
+    start: (time: number, callback: Callback) => void;
+    suspend: (callback: Callback) => void;
+    pause: (callback: Callback) => void;
+    resume: (callback: Callback) => void;
+
+    // Clock manager management
+    set_restart_clock: (restart: boolean, callback: Callback) => void;
+    set_timings: (timings: ClockManagerTimings, callback: Callback) => void;
 }
 
 export function registerAdminNamespace(server: Server, game: Game, clock: Clock, clockManager: ClockManager) {
@@ -60,59 +75,57 @@ export function registerAdminNamespace(server: Server, game: Game, clock: Clock,
             callback({ success: true });
         });
 
-        socket.on("set_time", (time: number, callback: (error: Result) => void) => {
+        socket.on("set_time", (time, callback) => {
             if (typeof callback !== "function")
                 return;
 
-            if (typeof time !== "number" || !isFinite(time)) {
+            if (!isInt(time)) {
                 callback({ success: false, message: "Invalid time" });
-                return
+                return;
             }
 
             callback(createResult(() => clock.setTime(time)));
         });
 
-        socket.on("add_time", (time: number, callback: (error: Result) => void) => {
+        socket.on("add_time", (time, callback) => {
             if (typeof callback !== "function")
                 return;
 
-            if (typeof time !== "number" || !isFinite(time)) {
+            if (!isInt(time)) {
                 callback({ success: false, message: "Invalid time" });
-                return
+                return;
             }
 
             callback(createResult(() => clock.addTime(time)));
         });
 
-        socket.on("start", (time: number, callback: (error: Result) => void) => {
+        socket.on("start", (time, callback) => {
             if (typeof callback !== "function")
                 return;
 
-            if (typeof time !== "number" || !isFinite(time)) {
+            if (!isInt(time)) {
                 callback({ success: false, message: "Invalid time" });
-                return
+                return;
             }
-
 
             callback(createResult(() => clock.start(time)));
         });
 
-        socket.on("suspend", (callback: (error: Result) => void) => {
+        socket.on("suspend", (callback) => {
             if (typeof callback !== "function")
                 return;
-
 
             callback(createResult(() => clock.suspend()));
         });
 
-        socket.on("pause", (callback: (error: Result) => void) => {
+        socket.on("pause", (callback) => {
             if (typeof callback !== "function")
                 return;
 
             callback(createResult(() => clock.pause()));
         });
 
-        socket.on("resume", (callback: (error: Result) => void) => {
+        socket.on("resume", (callback) => {
             if (typeof callback !== "function")
                 return;
 
@@ -129,6 +142,40 @@ export function registerAdminNamespace(server: Server, game: Game, clock: Clock,
                     clock.resume();
                 }
             }));
+        });
+
+        socket.on("set_restart_clock", (restart, callback) => {
+            if (typeof callback !== "function")
+                return;
+
+            if (typeof restart !== "boolean") {
+                callback({ success: false, message: "Invalid type" });
+                return;
+            }
+
+            clockManager.restartAfterTurn = restart;
+            callback({ success: true });
+        });
+
+        socket.on("set_timings", (timings, callback) => {
+            if (typeof callback !== "function")
+                return;
+
+            if (!isObject(timings)) {
+                callback({ success: false, message: "Invalid type" });
+            } else if (!isInt(timings.timeForTurn)) {
+                callback({ success: false, message: "Invalid turn duration" });
+            } else if (!isInt(timings.timeForCardDraw)) {
+                callback({ success: false, message: "Invalid card draw duration" });
+            } else if (!isReal(timings.specialTurnMultiplier)) {
+                callback({ success: false, message: "Invalid special turn multiplier" });
+            } else {
+                clockManager.timeForTurn = timings.timeForTurn;
+                clockManager.timeForCardDraw = timings.timeForCardDraw;
+                clockManager.specialTurnMultiplier = timings.specialTurnMultiplier;
+
+                callback({ success: true });
+            }
         });
     });
 

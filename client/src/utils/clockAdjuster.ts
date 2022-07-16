@@ -34,4 +34,8 @@ export class ClockAdjuster {
       this.history.shift();
     }
   }
+
+  hasSkewData(): boolean {
+    return this.history.length > 0;
+  }
 }

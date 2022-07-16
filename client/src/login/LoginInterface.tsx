@@ -36,7 +36,7 @@ export default function LoginInterface({
   setLoginState: (state: LoginState) => void;
 }) {
   const { emitAck, connected } = useSocket<ListenEvents, EmitEvents>(
-    "/",
+    "/auth",
     {},
     () => {},
     []

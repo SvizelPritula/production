@@ -7,6 +7,8 @@ function getToastName(kind: ToastType): string {
   switch (kind) {
     case ToastType.Error:
       return "Error";
+    case ToastType.Success:
+      return "Success";
   }
 }
 
@@ -14,6 +16,8 @@ function getToastClassName(kind: ToastType): string {
   switch (kind) {
     case ToastType.Error:
       return "error";
+    case ToastType.Success:
+      return "success";
   }
 }
 

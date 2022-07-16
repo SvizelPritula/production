@@ -52,3 +52,16 @@
 .error .button:hover, .error .button:focus {
   color: #2B0000;
 }
+
+.success {
+  background-color: #008000;
+  border-color: #00AA00;
+}
+
+.success .button {
+  color: #005500;
+}
+
+.success .button:hover, .success .button:focus {
+  color: #002B00;
+}
