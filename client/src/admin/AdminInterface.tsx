@@ -5,7 +5,6 @@ import { useSocket } from "utils/useSocket";
 
 import Toasts from "components/Toasts";
 import Layout from "components/Layout";
-import Overlay from "components/Overlay";
 import AdminHeader from "admin/AdminHeader";
 import { useToasts } from "utils/useToasts";
 import { Toast, ToastType } from "types/toast";
@@ -30,7 +29,10 @@ interface ClockManagerTimings {
   specialTurnMultiplier: number;
 }
 
-interface ListenEvents {}
+interface ListenEvents {
+  set_saves: (names: string[]) => void;
+  add_save: (name: string) => void;
+}
 
 interface EmitEvents {
   advance_turn: () => Promise<Result>;
@@ -44,6 +46,9 @@ interface EmitEvents {
 
   set_restart_clock: (restart: boolean) => Promise<Result>;
   set_timings: (timings: ClockManagerTimings) => Promise<Result>;
+
+  load: (name: string) => Promise<Result>;
+  new_game: () => Promise<Result>;
 }
 
 export default function AdminInterface({
@@ -53,6 +58,8 @@ export default function AdminInterface({
   loginState: SuccessfulLoginState;
   logout: () => void;
 }) {
+  const [saveNames, setSaveNames] = useState<string[]>([]);
+
   const { emitAck, connected } = useSocket<ListenEvents, EmitEvents>(
     "/admin",
     { auth: { code: loginState.code } },
@@ -63,6 +70,16 @@ export default function AdminInterface({
         } else {
           console.error(error.message);
         }
+      });
+
+      socket.on("set_saves", (names) => {
+        setSaveNames(names);
+      });
+
+      socket.on("add_save", (name) => {
+        setSaveNames((names) =>
+          names.concat(names.includes(name) ? [] : [name])
+        );
       });
     },
     [loginState.code]
@@ -155,6 +172,26 @@ export default function AdminInterface({
           }),
         "Saved timings"
       );
+    }
+  }
+
+  const [saveNameValue, setSaveNameValue] = useState<string>("new");
+
+  var name: string | null = null;
+
+  if (saveNameValue.startsWith("s")) {
+    name = saveNameValue.slice(1);
+
+    if (!saveNames.includes(name)) {
+      name = null;
+    }
+  }
+
+  async function loadSave() {
+    if (name != null) {
+      await handleResult(() => emitAck("load", name!), `Loaded ${name}`);
+    } else {
+      await handleResult(() => emitAck("new_game"), `Created new game`);
     }
   }
 
@@ -272,6 +309,31 @@ export default function AdminInterface({
 
           <button className={formStyles.button} onClick={() => sendTimings()}>
             Save timings
+          </button>
+
+          <h2>Saves</h2>
+
+          <label className={formStyles.label} htmlFor="save-name">
+            Save name:
+          </label>
+
+          <select
+            id="save-name"
+            className={formStyles.input}
+            value={name != null ? "s" + name : "new"}
+            onChange={(e) => setSaveNameValue(e.target.value)}
+          >
+            <option value="new">New game</option>
+
+            {saveNames.map((name) => (
+              <option value={"s" + name} key={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+
+          <button className={formStyles.button} onClick={() => loadSave()}>
+            Load save
           </button>
         </div>
       </div>

@@ -4,8 +4,9 @@ import { isInt, isObject, isReal } from "src/assert";
 import { Clock } from "src/clock";
 import { ClockManager } from "src/clock_manager";
 import { Game } from "src/game/game";
-import { UserError } from "src/game/types";
+import { GameState, UserError } from "src/game/types";
 import { loginByCode } from "src/login";
+import { SaveManager } from "src/saves";
 
 interface OkResult {
     success: true;
@@ -26,7 +27,10 @@ interface ClockManagerTimings {
     specialTurnMultiplier: number;
 }
 
-interface AdminServerToClientEvents { }
+interface AdminServerToClientEvents {
+    set_saves: (names: string[]) => void;
+    add_save: (name: string) => void;
+}
 
 interface AdminClientToServerEvents {
     advance_turn: (callback: Callback) => void;
@@ -42,9 +46,13 @@ interface AdminClientToServerEvents {
     // Clock manager management
     set_restart_clock: (restart: boolean, callback: Callback) => void;
     set_timings: (timings: ClockManagerTimings, callback: Callback) => void;
+
+    // Saves
+    load: (name: string, callback: Callback) => void;
+    new_game: (callback: Callback) => void;
 }
 
-export function registerAdminNamespace(server: Server, game: Game, clock: Clock, clockManager: ClockManager) {
+export function registerAdminNamespace(server: Server, game: Game, clock: Clock, clockManager: ClockManager, saves: SaveManager) {
     const registry = game.registry;
 
     const adminNamespace: Namespace<AdminClientToServerEvents, AdminServerToClientEvents, {}, {}> = server.of("/admin");
@@ -177,6 +185,46 @@ export function registerAdminNamespace(server: Server, game: Game, clock: Clock,
                 callback({ success: true });
             }
         });
+
+        socket.on("load", (name, callback) => {
+            if (typeof callback !== "function")
+                return;
+
+            if (typeof name !== "string") {
+                callback({ success: false, message: "Invalid type" });
+                return;
+            }
+
+            saves.load(name, registry).then(state => {
+                game.setState(state);
+
+                callback({ success: true });
+            }).catch(error => {
+                if (error instanceof UserError) {
+                    callback({ success: false, message: error.message });
+                } else {
+                    callback({ success: false, message: "Failed to load save" });
+                    console.error("error");
+                }
+            })
+        });
+
+        socket.on("new_game", (callback) => {
+            if (typeof callback !== "function")
+                return;
+
+            game.setState(new GameState(game.registry));
+
+            callback({ success: true });
+        });
+
+        saves.listSaves().then(names => {
+            socket.emit("set_saves", names);
+        }).catch(console.error);
+    });
+
+    saves.on("save", name => {
+        adminNamespace.emit("add_save", name);
     });
 
     function createResult(callback: () => void): Result {

@@ -7,7 +7,7 @@ import { cardsInHand } from "./constants";
 
 export class Game extends EventEmitter {
     readonly registry: Registry;
-    readonly state: GameState;
+    state: GameState;
 
     playSelection: Map<Player, number | null>;
     drawSelection: Map<Player, number[] | null>;
@@ -146,6 +146,34 @@ export class Game extends EventEmitter {
         this.state.turn = getNextTurn(this.state.turn);
 
         this.emit("turn", this.state);
+        this.emit("turn_change", this.state);
+
+        for (var player of registry.listPlayers()) {
+            this.emit("play_selection_change", player, null, true);
+            this.emit("draw_selection_change", player, [], true);
+        }
+    }
+
+    setTurn(turn: Turn) {
+        this.state.turn = turn;
+
+        this.playSelection = this.createEmptySelection();
+        this.drawSelection = this.createEmptySelection();
+
+        this.emit("turn_change", this.state);
+
+        for (var player of registry.listPlayers()) {
+            this.emit("play_selection_change", player, null, true);
+            this.emit("draw_selection_change", player, [], true);
+        }
+    }
+
+    setState(state: GameState) {
+        this.state = state;
+
+        this.playSelection = this.createEmptySelection();
+        this.drawSelection = this.createEmptySelection();
+        
         this.emit("turn_change", this.state);
 
         for (var player of registry.listPlayers()) {
