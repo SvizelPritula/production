@@ -13,4 +13,6 @@
 .text {
   max-width: 12cm;
   width: 100%;
+
+  text-align: center;
 }

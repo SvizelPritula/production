@@ -20,7 +20,7 @@ export function useToasts<T>(): [toasts: ToastInfo<T>[], addToast: (value: T) =>
     var key = nextKey.current++;
 
     setToasts(toasts => {
-      return toasts.concat([{ key, value }]);
+      return toasts.concat([{ key, value }]).slice(-5);
     });
 
     return key;

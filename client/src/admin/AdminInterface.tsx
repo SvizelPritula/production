@@ -160,123 +160,121 @@ export default function AdminInterface({
 
   return (
     <Layout header={<AdminHeader online={connected} logout={logout} />}>
-      <Overlay>
-        <div className={styles.wrapper}>
-          <div className={styles.controls}>
-            <h2>Game flow control</h2>
-            <button
-              className={formStyles.button}
-              onClick={() => sendSimpleEvent("advance_turn", "Evaluated turn")}
-            >
-              Evaluate turn
-            </button>
+      <Toasts toasts={toasts} />
+      <div className={styles.wrapper}>
+        <div className={styles.controls}>
+          <h2>Game flow control</h2>
+          <button
+            className={formStyles.button}
+            onClick={() => sendSimpleEvent("advance_turn", "Evaluated turn")}
+          >
+            Evaluate turn
+          </button>
 
-            <h2>Clock control</h2>
+          <h2>Clock control</h2>
 
-            <button
-              className={formStyles.button}
-              onClick={() => sendSimpleEvent("resume", "Resumed")}
-            >
-              Start / Resume
-            </button>
-            <button
-              className={formStyles.button}
-              onClick={() => sendSimpleEvent("pause", "Paused")}
-            >
-              Pause
-            </button>
-            <button
-              className={formStyles.button}
-              onClick={() => sendSimpleEvent("suspend", "Suspended")}
-            >
-              Suspend
-            </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendSimpleEvent("resume", "Resumed")}
+          >
+            Start / Resume
+          </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendSimpleEvent("pause", "Paused")}
+          >
+            Pause
+          </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendSimpleEvent("suspend", "Suspended")}
+          >
+            Suspend
+          </button>
 
-            <h3>Time adjustment</h3>
+          <h3>Time adjustment</h3>
 
-            <input
-              id="code"
-              className={formStyles.input}
-              type={"number"}
-              value={timeValue}
-              onChange={(e) => setTimeValue(e.target.value)}
-            />
-            <button
-              className={formStyles.button}
-              onClick={() => sendTimeEvent("set_time", "Set time")}
-            >
-              Set time
-            </button>
-            <button
-              className={formStyles.button}
-              onClick={() => sendTimeEvent("add_time", "Added time")}
-            >
-              Add time
-            </button>
-            <button
-              className={formStyles.button}
-              onClick={() => sendTimeEvent("start", "Started")}
-            >
-              Set time and start
-            </button>
+          <input
+            id="code"
+            className={formStyles.input}
+            type={"number"}
+            value={timeValue}
+            onChange={(e) => setTimeValue(e.target.value)}
+          />
+          <button
+            className={formStyles.button}
+            onClick={() => sendTimeEvent("set_time", "Set time")}
+          >
+            Set time
+          </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendTimeEvent("add_time", "Added time")}
+          >
+            Add time
+          </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendTimeEvent("start", "Started")}
+          >
+            Set time and start
+          </button>
 
-            <h2>Clock manager configuration</h2>
+          <h2>Clock manager configuration</h2>
 
-            <button
-              className={formStyles.button}
-              onClick={() => sendSetAutorestart(true)}
-            >
-              Enable automatic timer restart
-            </button>
-            <button
-              className={formStyles.button}
-              onClick={() => sendSetAutorestart(false)}
-            >
-              Disable automatic timer restart
-            </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendSetAutorestart(true)}
+          >
+            Enable automatic timer restart
+          </button>
+          <button
+            className={formStyles.button}
+            onClick={() => sendSetAutorestart(false)}
+          >
+            Disable automatic timer restart
+          </button>
 
-            <h3>Timings</h3>
+          <h3>Timings</h3>
 
-            <label className={formStyles.label} htmlFor="turn-time">
-              Normal turn:
-            </label>
-            <input
-              id="turn-time"
-              className={formStyles.input}
-              type={"number"}
-              value={timeForTurnValue}
-              onChange={(e) => setTimeForTurnValue(e.target.value)}
-            />
+          <label className={formStyles.label} htmlFor="turn-time">
+            Normal turn:
+          </label>
+          <input
+            id="turn-time"
+            className={formStyles.input}
+            type={"number"}
+            value={timeForTurnValue}
+            onChange={(e) => setTimeForTurnValue(e.target.value)}
+          />
 
-            <label className={formStyles.label} htmlFor="draw-time">
-              Normal card draw:
-            </label>
-            <input
-              id="draw-time"
-              className={formStyles.input}
-              type={"number"}
-              value={timeForCardDrawValue}
-              onChange={(e) => setTimeForCardDrawValue(e.target.value)}
-            />
+          <label className={formStyles.label} htmlFor="draw-time">
+            Normal card draw:
+          </label>
+          <input
+            id="draw-time"
+            className={formStyles.input}
+            type={"number"}
+            value={timeForCardDrawValue}
+            onChange={(e) => setTimeForCardDrawValue(e.target.value)}
+          />
 
-            <label className={formStyles.label} htmlFor="special">
-              Special turn multiplier:
-            </label>
-            <input
-              id="special"
-              className={formStyles.input}
-              type={"number"}
-              value={specialTurnMultiplierValue}
-              onChange={(e) => setSpecialTurnMultiplierValue(e.target.value)}
-            />
+          <label className={formStyles.label} htmlFor="special">
+            Special turn multiplier:
+          </label>
+          <input
+            id="special"
+            className={formStyles.input}
+            type={"number"}
+            value={specialTurnMultiplierValue}
+            onChange={(e) => setSpecialTurnMultiplierValue(e.target.value)}
+          />
 
-            <button className={formStyles.button} onClick={() => sendTimings()}>
-              Save timings
-            </button>
-          </div>
+          <button className={formStyles.button} onClick={() => sendTimings()}>
+            Save timings
+          </button>
         </div>
-        <Toasts toasts={toasts} />
-      </Overlay>
+      </div>
     </Layout>
   );
 }

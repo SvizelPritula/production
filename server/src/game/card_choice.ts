@@ -27,7 +27,6 @@ export function calculateCardChoice(
   while (selectedCards.length < cardChoiceSize) {
     if (weightedArray.length > 0) {
       var selectedCard = random.nextWeightedChoice(weightedArray);
-      weightedArray = weightedArray.filter((e) => e[0] != selectedCard);
       selectedCards.push(selectedCard);
     } else {
       selectedCards.push(random.nextChoice(registry.listCards()));

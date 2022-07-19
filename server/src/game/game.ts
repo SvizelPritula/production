@@ -139,9 +139,7 @@ export class Game extends EventEmitter {
                 break;
         }
 
-        if (isLastTurnInRound(this.state.turn)) {
-            applyPassiveEffects(this.state, this.registry);
-        }
+        applyPassiveEffects(this.state, this.registry);
 
         this.playSelection = this.createEmptySelection();
         this.drawSelection = this.createEmptySelection();

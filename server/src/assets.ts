@@ -31,8 +31,8 @@ function escapeXML(string: string): string {
 
 function getFallbackImage(name: string) {
   let result = `<?xml version="1.0" encoding="UTF-8"?>`;
-  result += `<svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">`;
-  result += `<text x="50" y="50" dominant-baseline="middle" text-anchor="middle">${escapeXML(
+  result += `<svg version="1.1" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">`;
+  result += `<text x="50" y="75" dominant-baseline="middle" text-anchor="middle">${escapeXML(
     name
   )}</text>`;
   result += `</svg>`;

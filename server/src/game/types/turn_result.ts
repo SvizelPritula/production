@@ -3,17 +3,19 @@ import { GameState, Player, Turn, Registry } from "src/game/types";
 export type GameStateChangeCallback = (state: GameState, registry: Registry) => void;
 
 export interface GameStateChangeEffect {
-    apply: GameStateChangeCallback;
+    apply(state: GameState, registry: Registry): void;
 }
 
 export class CardEffectContext {
     state: GameState;
     player: Player;
+    registry: Registry;
     private result: TurnResult;
 
-    constructor(state: GameState, player: Player, result: TurnResult) {
+    constructor(state: GameState, player: Player, registry: Registry, result: TurnResult) {
         this.state = state;
         this.player = player;
+        this.registry = registry;
         this.result = result;
     }
 
@@ -48,6 +50,6 @@ export class TurnResult {
     }
 
     createContext(player: Player): CardEffectContext {
-        return new CardEffectContext(this.target, player, this);
+        return new CardEffectContext(this.target, player, this.registry, this);
     }
 }

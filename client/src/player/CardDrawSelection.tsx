@@ -25,6 +25,8 @@ export default function CardDrawSelection({
     isShadowed: isSelectionShadowed,
   } = shadowState;
 
+  if (!Array.isArray(selection)) selection = [];
+
   var selected = new Set(selection);
 
   var cards = turnData.options.map((card, id) => ({
@@ -46,6 +48,8 @@ export default function CardDrawSelection({
 
   function setSelected(id: number, selected: boolean) {
     setSelection((old) => {
+      if (old == null) return null!;
+
       var selection = old.filter((n) => n !== id);
       if (selected) selection.push(id);
       return selection;
