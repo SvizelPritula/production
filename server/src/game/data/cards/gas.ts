@@ -87,7 +87,7 @@ export const gasCards: CardType[] = [
         id: "gas-surplus",
         name: "Gas surplus",
         color: gas.color,
-        image: "pipe-surplus",
+        image: "surplus",
         effect(context) {
             for (var player of context.registry.listPlayers()) {
                 var production = context.state.getPlayer(player)!.getResource(gas)!.production;
