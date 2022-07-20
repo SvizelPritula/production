@@ -28,8 +28,8 @@ interface BoardLoginResult {
 
 export type LoginResult = UnknownLoginResult | BadPayloadResult | PlayerLoginResult | AdminLoginResult | BoardLoginResult;
 
-const adminCode = "admin";
-const boardCode = "board";
+const adminCode = "specialrunningscissors";
+const boardCode = "neocubism";
 
 export function loginByCode(code: string, registry: Registry): LoginResult {
     for (var player of registry.listPlayers()) {

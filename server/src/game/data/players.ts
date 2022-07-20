@@ -3,26 +3,26 @@ import { Player } from "src/game/types";
 export const players: Player[] = [
     {
         id: "red",
-        name: "Red",
-        code: "red",
+        name: "Červení",
+        code: "kolej",
         cardSeed: 0
     },
     {
         id: "green",
-        name: "Green",
-        code: "green",
+        name: "Zelení",
+        code: "malina",
         cardSeed: 1
     },
     {
         id: "blue",
-        name: "Blue",
-        code: "blue",
+        name: "Modří",
+        code: "koleda",
         cardSeed: 2
     },
     {
         id: "yellow",
-        name: "Yellow",
-        code: "yellow",
+        name: "Žlutí",
+        code: "balet",
         cardSeed: 3
     }
 ];
