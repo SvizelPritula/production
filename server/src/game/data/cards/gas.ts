@@ -120,25 +120,5 @@ export const gasCards: CardType[] = [
                 gasChance(getRound(state.turn))
             );
         },
-    },
-    {
-        id: "coal-to-gas-upgrade",
-        name: "Coal to gas plant upgrade",
-        color: gas.color,
-        image: "coal-to-gas-upgrade",
-        effect(context) {
-            var amount = context.state.getPlayer(context.player)!.getResource(coal)!.usage;
-            amount = Math.min(amount, 20);
-
-            context.addEffect(new AddUsage(context.player, coal, -amount));
-            context.addEffect(new AddUsage(context.player, gas, amount));
-        },
-        chance(state, player, registry) {
-            return product(
-                rareChance,
-                gasChance(getRound(state.turn)),
-                Number(getRound(state.turn) > 15)
-            );
-        },
     }
 ];
