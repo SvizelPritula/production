@@ -1,8 +1,8 @@
 import { CardType } from "src/game/types";
-import { coal, gas, nuclear } from "src/game/data/resources";
+import { nuclear } from "src/game/data/resources";
 import { product } from "src/game/math_utils";
-import { gasChance, commonChance, getRound, uncommonChance, rareChance, epicChance, nuclearChance } from "src/game/data/chances";
-import { AddPoints, AddProduction, AddUnits, AddUsage } from "src/game/data/effects";
+import { commonChance, getRound, rareChance, nuclearChance } from "src/game/data/chances";
+import { AddUnits, AddUsage } from "src/game/data/effects";
 
 export const nuclearCards: CardType[] = [
     {

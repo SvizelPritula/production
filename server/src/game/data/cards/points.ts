@@ -1,8 +1,7 @@
 import { CardType } from "src/game/types";
-import { coal } from "src/game/data/resources";
 import { product } from "src/game/math_utils";
-import { coalChance, commonChance, getRound, uncommonChance, rareChance, epicChance, pointChance } from "src/game/data/chances";
-import { AddPoints, AddProduction, AddUnits, AddUsage } from "src/game/data/effects";
+import { getRound, pointChance, legendaryChance } from "src/game/data/chances";
+import { AddPoints } from "src/game/data/effects";
 
 const specialColor = "#111111";
 
@@ -17,7 +16,22 @@ export const pointCards: CardType[] = [
         },
         chance(state, player, registry) {
             return product(
-                epicChance,
+                legendaryChance,
+                pointChance(getRound(state.turn))
+            );
+        },
+    },
+    {
+        id: "20-points",
+        name: "20 points",
+        color: specialColor,
+        image: "add-20",
+        effect(context) {
+            context.addEffect(new AddPoints(context.player, 20));
+        },
+        chance(state, player, registry) {
+            return product(
+                legendaryChance,
                 pointChance(getRound(state.turn))
             );
         },

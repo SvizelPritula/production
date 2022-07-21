@@ -1,5 +1,5 @@
 import { CardType } from "src/game/types";
-import { coal, gas } from "src/game/data/resources";
+import { gas } from "src/game/data/resources";
 import { product } from "src/game/math_utils";
 import { gasChance, commonChance, getRound, uncommonChance, rareChance, epicChance } from "src/game/data/chances";
 import { AddPoints, AddProduction, AddUnits, AddUsage } from "src/game/data/effects";
@@ -106,7 +106,7 @@ export const gasCards: CardType[] = [
         id: "gas-leak",
         name: "Gas leak",
         color: gas.color,
-        image: "gas-leak",
+        image: "leak",
         effect(context) {
             for (var player of context.registry.listPlayers()) {
                 if (player != context.player) {

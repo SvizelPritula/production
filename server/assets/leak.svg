@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100" height="150" version="1.1" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+ <g fill="none" stroke="#000" stroke-linecap="square" stroke-width="3">
+  <path d="m75 45h-5v60h5v15h-50v-15h5v-60h-5v-15h50z"/>
+  <path d="m70 45h-40"/>
+  <path d="m70 105h-40"/>
+ </g>
+ <g>
+  <circle cx="31.25" cy="37.5" r="1.875"/>
+  <circle cx="38.75" cy="37.5" r="1.875"/>
+  <circle cx="46.25" cy="37.5" r="1.875"/>
+  <circle cx="53.75" cy="37.5" r="1.875"/>
+  <circle cx="61.25" cy="37.5" r="1.875"/>
+  <circle cx="68.75" cy="37.5" r="1.875"/>
+  <circle cx="31.25" cy="112.5" r="1.875"/>
+  <circle cx="38.75" cy="112.5" r="1.875"/>
+  <circle cx="46.25" cy="112.5" r="1.875"/>
+  <circle cx="53.75" cy="112.5" r="1.875"/>
+  <circle cx="61.25" cy="112.5" r="1.875"/>
+  <circle cx="68.75" cy="112.5" r="1.875"/>
+ </g>
+ <g fill="none" stroke="#000" stroke-linecap="round">
+  <g stroke-linejoin="round">
+   <path d="m37.5 65 5 2.5 10-2.5" stroke-width="2"/>
+   <g stroke-width="1px">
+    <path d="m42.5 67.5 5 5 2.5 7.5"/>
+    <path d="m52.5 65 5-2.5 2.5-2.5"/>
+    <path d="m52.5 65 7.5 2.5 2.5 5"/>
+    <path d="m60 67.5 5-2.5"/>
+   </g>
+   <path d="m37.5 65-2.5 7.5" stroke-width="2"/>
+   <g stroke-width="1px">
+    <path d="m47.5 72.5 5 2.5"/>
+    <path d="m42.5 62.5-5 2.5"/>
+    <path d="m35 72.5 2.5 5"/>
+   </g>
+   <path d="m30 60 7.5 5" stroke-width="3"/>
+  </g>
+  <g>
+   <path d="m70 95-10-5-7.5 2.5" stroke-width="2"/>
+   <g stroke-width="1px">
+    <path d="m52.5 92.5-5 5"/>
+    <path d="m47.5 90 5 2.5"/>
+    <path d="m65 92.5-5 2.5"/>
+    <path d="M 57.5,87.5 60,90"/>
+    <path d="m55 82.5 2.5 5-5-2.5"/>
+   </g>
+  </g>
+ </g>
+</svg>

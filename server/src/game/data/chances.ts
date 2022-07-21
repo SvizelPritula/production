@@ -47,6 +47,7 @@ export const commonChance = 20;
 export const uncommonChance = 12;
 export const rareChance = 6;
 export const epicChance = 2;
+export const legendaryChance = 2;
 
 export function getRound(turn: Turn) {
     if (turn.phase === "card_draw" || turn.phase === "card_usage") {

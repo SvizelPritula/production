@@ -1,8 +1,8 @@
 import { CardType } from "src/game/types";
-import { coal, gas, nuclear, solar } from "src/game/data/resources";
+import { solar } from "src/game/data/resources";
 import { product } from "src/game/math_utils";
-import { gasChance, commonChance, getRound, uncommonChance, rareChance, epicChance, nuclearChance, solarChance } from "src/game/data/chances";
-import { AddPoints, AddProduction, AddUnits, AddUsage } from "src/game/data/effects";
+import { commonChance, getRound, uncommonChance, rareChance, solarChance } from "src/game/data/chances";
+import { AddProduction, AddUsage } from "src/game/data/effects";
 
 export const solarCards: CardType[] = [
     {
