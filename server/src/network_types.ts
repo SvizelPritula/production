@@ -1,4 +1,4 @@
-import { CardType, CardUsageTurn, CardDrawTurn, Turn, Player, Resource, GameState, Registry } from "src/game/types";
+import { CardType, CardUsageTurn, CardDrawTurn, Turn, Player, Resource, GameState, Registry, BeforeGameTurn, AfterGameTurn } from "src/game/types";
 import { AssetStore } from "src/assets";
 import { Game } from "src/game/game";
 
@@ -18,11 +18,16 @@ export interface CardDrawTurnOptions {
     requiredSelections: number;
 }
 
-export interface PassiveTurnOptions {
-    turn: Turn;
+export interface BeforeGameTurnOptions {
+    turn: BeforeGameTurn;
 }
 
-export type TurnOptions = CardUsageTurnOptions | CardDrawTurnOptions | PassiveTurnOptions;
+export interface AfterGameTurnOptions {
+    turn: AfterGameTurn;
+    points: number;
+}
+
+export type TurnOptions = CardUsageTurnOptions | CardDrawTurnOptions | BeforeGameTurnOptions | AfterGameTurnOptions;
 
 interface PublicResourceInfo {
     id: string;
@@ -71,6 +76,11 @@ export function serializeTurnOptions(player: Player, game: Game, assets: AssetSt
             return {
                 turn: turn,
                 options: game.state.getPlayer(player)!.cards.map(c => getCardInfo(c, assets))
+            }
+        case "after_game":
+            return {
+                turn: turn,
+                points: game.state.getPlayer(player)!.points
             }
         default:
             return {

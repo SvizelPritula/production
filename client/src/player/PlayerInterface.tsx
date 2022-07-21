@@ -7,7 +7,12 @@ import { useToasts } from "utils/useToasts";
 import { Toast, ToastType } from "types/toast";
 import { Turn } from "types/turn";
 import { Player } from "player/playerData";
-import { CardDrawTurnData, CardUsageTurnData, TurnData } from "player/turnData";
+import {
+  AfterGameTurnData,
+  CardDrawTurnData,
+  CardUsageTurnData,
+  TurnData,
+} from "player/turnData";
 
 import Toasts from "components/Toasts";
 import Layout from "components/Layout";
@@ -31,6 +36,7 @@ interface ListenEvents {
 }
 
 function getSelectionElements(
+  player: Player | null,
   turnData: TurnData | null,
   selection: ShadowState<number | null | number[]>,
   saveSelection: () => Promise<void>
@@ -57,9 +63,19 @@ function getSelectionElements(
         />
       );
     case "before_game":
-      return <InfoText>Prosíme, vyčkejte na zahájení.</InfoText>;
+      return (
+        <InfoText>
+          <p>Prosím, vyčkejte zahájení hry.</p>
+          <p>Pokuste se získat co nejvíce bodů a vyhrát. Hodně štěstí!</p>
+        </InfoText>
+      );
     case "after_game":
-      return <InfoText>Gratuluji!</InfoText>;
+      return (
+        <InfoText>
+          Získali jste <b>{(turnData as AfterGameTurnData).points}</b> bodů.
+          Gratuluji!
+        </InfoText>
+      );
     default:
       return <InfoText>Neznámý tah</InfoText>;
   }
@@ -166,7 +182,7 @@ export default function PlayerInterface({
       }
     >
       <Overlay>
-        {getSelectionElements(turnData, shadowState, saveSelection)}
+        {getSelectionElements(player, turnData, shadowState, saveSelection)}
         <Toasts toasts={toasts} />
       </Overlay>
     </Layout>

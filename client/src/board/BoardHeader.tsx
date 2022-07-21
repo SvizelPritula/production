@@ -26,7 +26,11 @@ function getTurnName(turn: Turn | null): ReactNode {
       );
 
     case "before_game":
-      return <><b>Generace</b> - Prosíme, vyčkejte&#x2026;</>;
+      return (
+        <>
+          <b>Generace</b> - Prosím, vyčkejte&#x2026;
+        </>
+      );
 
     case "after_game":
       return <>Vyhodnocení</>;
