@@ -42,7 +42,7 @@ export default function CardUsageSelection({
 
   var savingDisabledReason: string | null = isSelectionShadowed
     ? null
-    : "Saved";
+    : "Uloženo";
 
   function setSelected(value: string) {
     if (value === "none") {
@@ -66,13 +66,13 @@ export default function CardUsageSelection({
         save();
       }}
     >
-      <p className={formStyles.label}>Select a card:</p>
+      <p className={formStyles.label}>Vyberte kartu:</p>
       <div className={styles.options}>
         {cards.map(({ card, id, selected }) => (
           <label
             className={styles.option}
             htmlFor={`card-${id}`}
-            aria-label={id === null ? "Blank card" : `Card number ${id + 1}`}
+            aria-label={id === null ? "Prázdná karta" : `Karta číslo ${id + 1}`}
             key={id}
           >
             <div>
@@ -99,7 +99,7 @@ export default function CardUsageSelection({
         className={formStyles.button}
         disabled={savingDisabledReason != null || locked}
       >
-        {savingDisabledReason ?? "Save"}
+        {savingDisabledReason ?? "Uložit"}
       </button>
     </form>
   );

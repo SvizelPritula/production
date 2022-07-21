@@ -8,31 +8,31 @@ import Timer from "components/Timer";
 import headerStyles from "components/Layout.module.css";
 
 function getTurnName(turn: Turn | null): ReactNode {
-  if (turn === null) return "Connecting...";
+  if (turn === null) return "Připojování...";
 
   switch (turn.phase) {
     case "card_draw":
       return (
         <>
-          Round <b>{turn.round + 1}</b> - Drawing cards
+          <b>{turn.round + 1}</b>. kolo - Dobírání
         </>
       );
 
     case "card_usage":
       return (
         <>
-          Round <b>{turn.round + 1}</b> - Turn <b>{turn.turn + 1}</b>
+          <b>{turn.round + 1}</b>. kolo - <b>{turn.turn + 1}</b>. tah
         </>
       );
 
     case "before_game":
-      return <>Waiting for game start&#x2026;</>;
+      return <><b>Generace</b> - Prosíme, vyčkejte&#x2026;</>;
 
     case "after_game":
-      return <>Game evaluation</>;
+      return <>Vyhodnocení</>;
 
     default:
-      return "Unknown turn phase";
+      return "Neznámý táh";
   }
 }
 

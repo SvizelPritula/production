@@ -6,9 +6,9 @@ import styles from "components/Toasts.module.css";
 function getToastName(kind: ToastType): string {
   switch (kind) {
     case ToastType.Error:
-      return "Error";
+      return "Chyba";
     case ToastType.Success:
-      return "Success";
+      return "Úspěch";
   }
 }
 

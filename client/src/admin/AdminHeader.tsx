@@ -12,7 +12,7 @@ export default function AdminHeader({
 }) {
   return (
     <>
-      <h1 className={headerStyles.heading}>Game control</h1>
+      <h1 className={headerStyles.heading}>Ovládání hry</h1>
       <LogoutButton logout={logout} />
       <OnlineStatus online={online} />
     </>

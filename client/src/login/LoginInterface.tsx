@@ -84,18 +84,18 @@ export default function LoginInterface({
 
             break;
           default:
-            throw new Error(`Unexpected login kind ${result.kind}`);
+            throw new Error(`Neznámý druh uživadele: "${result.kind}"`);
         }
       } else {
         if (result.reason === "unknown_code") {
-          addError("Unknown login code");
+          addError("Neznámý kód");
         } else {
-          throw new Error(`Unexpected rejection reason ${result.reason}`);
+          throw new Error(`Přihášení se nezdařilo z neznámého důvodu: "${result.reason}"`);
         }
       }
     } catch (error) {
       console.error(error);
-      addError("Failed to connect to server");
+      addError("Připojení k serveru se nezdařilo");
     } finally {
       setLocked(false);
     }
@@ -116,7 +116,7 @@ export default function LoginInterface({
               htmlFor="code"
               className={`${formStyles.label} ${styles.label}`}
             >
-              Enter code:
+              Přihlašovací kód:
             </label>
 
             <input
@@ -133,7 +133,7 @@ export default function LoginInterface({
               className={formStyles.button}
               disabled={locked}
             >
-              Submit
+              Odeslat
             </button>
           </form>
         </div>

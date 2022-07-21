@@ -8,6 +8,15 @@ import CardDisplay from "components/CardDisplay";
 import styles from "player/selection.module.css";
 import formStyles from "utils/forms.module.css";
 
+function getPluralForm(
+  number: number,
+  forms: [string, string, string]
+): string {
+  if (number === 1) return forms[0];
+  if (number >= 2 && number <= 4) return forms[1];
+  return forms[2];
+}
+
 export default function CardDrawSelection({
   turnData,
   shadowState,
@@ -39,11 +48,11 @@ export default function CardDrawSelection({
   var selectionsRemaining = turnData.requiredSelections - selection.length;
 
   if (selectionsRemaining > 0) {
-    savingDisabledReason = `Select ${selectionsRemaining} more`;
+    savingDisabledReason = `Vyberte o ${selectionsRemaining} více`;
   } else if (selectionsRemaining < 0) {
-    savingDisabledReason = `Select ${-selectionsRemaining} less`;
+    savingDisabledReason = `Vyberte o ${-selectionsRemaining} méně`;
   } else if (!isSelectionShadowed) {
-    savingDisabledReason = `Saved`;
+    savingDisabledReason = `Uloženo`;
   }
 
   function setSelected(id: number, selected: boolean) {
@@ -62,6 +71,12 @@ export default function CardDrawSelection({
     setLocked(false);
   }
 
+  var cardsPlural = getPluralForm(turnData.requiredSelections, [
+    "kartu",
+    "karty",
+    "karet",
+  ]);
+
   return (
     <form
       className={styles.form}
@@ -71,14 +86,14 @@ export default function CardDrawSelection({
       }}
     >
       <p className={formStyles.label}>
-        Select <b>{turnData.requiredSelections}</b> cards:
+        Vyberte <b>{turnData.requiredSelections}</b> {cardsPlural}:
       </p>
       <div className={styles.options}>
         {cards.map(({ card, id, selected }) => (
           <label
             className={styles.option}
             htmlFor={`card-${id}`}
-            aria-label={`Card number ${id + 1}`}
+            aria-label={`Karta číslo ${id + 1}`}
             key={id}
           >
             <div>
@@ -103,7 +118,7 @@ export default function CardDrawSelection({
         className={formStyles.button}
         disabled={savingDisabledReason != null || locked}
       >
-        {savingDisabledReason ?? "Save"}
+        {savingDisabledReason ?? "Uložit"}
       </button>
     </form>
   );

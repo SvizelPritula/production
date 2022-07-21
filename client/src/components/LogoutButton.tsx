@@ -3,7 +3,12 @@ import headerStyles from "components/Layout.module.css";
 
 export default function LogoutButton({ logout }: { logout: () => void }) {
   return (
-    <button aria-label="Log out" onClick={logout} className={styles.button}>
+    <button
+      aria-label="Odhlásit"
+      title="Odhlásit"
+      onClick={logout}
+      className={styles.button}
+    >
       <svg
         viewBox="0 0 100 100"
         className={headerStyles.icon}

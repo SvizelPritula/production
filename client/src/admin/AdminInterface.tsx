@@ -129,7 +129,7 @@ export default function AdminInterface({
     var time = parseFloat(timeValue);
 
     if (!isFinite(time)) {
-      addError("Failed to parse time");
+      addError("Neplatný čas");
     } else {
       await handleResult(
         () => emitAck(type, Math.floor(time * 1000)),
@@ -141,7 +141,7 @@ export default function AdminInterface({
   async function sendSetAutorestart(restart: boolean) {
     handleResult(
       () => emitAck("set_restart_clock", restart),
-      restart ? "Enabled automatic restart" : "Disabled automatic restart"
+      restart ? "Obnovení časovače zapnuto" : "Obnovení časovače vypnuto"
     );
   }
 
@@ -161,7 +161,7 @@ export default function AdminInterface({
       !isFinite(timeForCardDraw) ||
       !isFinite(specialTurnMultiplier)
     ) {
-      addError("Failed to parse time");
+      addError("Neplatný čas");
     } else {
       await handleResult(
         () =>
@@ -170,7 +170,7 @@ export default function AdminInterface({
             timeForCardDraw: Math.floor(timeForCardDraw * 1000),
             specialTurnMultiplier,
           }),
-        "Saved timings"
+        "Trvání tahů uloženo"
       );
     }
   }
@@ -189,9 +189,9 @@ export default function AdminInterface({
 
   async function loadSave() {
     if (name != null) {
-      await handleResult(() => emitAck("load", name!), `Loaded ${name}`);
+      await handleResult(() => emitAck("load", name!), `Načten stav ${name}`);
     } else {
-      await handleResult(() => emitAck("new_game"), `Created new game`);
+      await handleResult(() => emitAck("new_game"), `Zahájena nová hra`);
     }
   }
 
@@ -200,36 +200,36 @@ export default function AdminInterface({
       <Toasts toasts={toasts} />
       <div className={styles.wrapper}>
         <div className={styles.controls}>
-          <h2>Game flow control</h2>
+          <h2>Průběh hry</h2>
           <button
             className={formStyles.button}
-            onClick={() => sendSimpleEvent("advance_turn", "Evaluated turn")}
+            onClick={() => sendSimpleEvent("advance_turn", "Tah vyhodnocen")}
           >
-            Evaluate turn
+            Vyhodnotit tah
           </button>
 
-          <h2>Clock control</h2>
+          <h2>Časovač</h2>
 
           <button
             className={formStyles.button}
-            onClick={() => sendSimpleEvent("resume", "Resumed")}
+            onClick={() => sendSimpleEvent("resume", "Časovač spuštěn")}
           >
-            Start / Resume
+            Spustit / Pokračovat
           </button>
           <button
             className={formStyles.button}
-            onClick={() => sendSimpleEvent("pause", "Paused")}
+            onClick={() => sendSimpleEvent("pause", "Časovač pozastaven")}
           >
-            Pause
+            Pozastavit
           </button>
           <button
             className={formStyles.button}
-            onClick={() => sendSimpleEvent("suspend", "Suspended")}
+            onClick={() => sendSimpleEvent("suspend", "Časovač zastaven")}
           >
-            Suspend
+            Zastavit
           </button>
 
-          <h3>Time adjustment</h3>
+          <h3>Nastavení času</h3>
 
           <input
             id="code"
@@ -240,42 +240,42 @@ export default function AdminInterface({
           />
           <button
             className={formStyles.button}
-            onClick={() => sendTimeEvent("set_time", "Set time")}
+            onClick={() => sendTimeEvent("set_time", "Čas nastaven")}
           >
-            Set time
+            Nastavit čas
           </button>
           <button
             className={formStyles.button}
-            onClick={() => sendTimeEvent("add_time", "Added time")}
+            onClick={() => sendTimeEvent("add_time", "Čas přidán")}
           >
-            Add time
+            Přidat čas
           </button>
           <button
             className={formStyles.button}
-            onClick={() => sendTimeEvent("start", "Started")}
+            onClick={() => sendTimeEvent("start", "Časovat nastaven a spuštěn")}
           >
-            Set time and start
+            Nastavit čas a spustit
           </button>
 
-          <h2>Clock manager configuration</h2>
+          <h2>Ovladač hodin</h2>
 
           <button
             className={formStyles.button}
             onClick={() => sendSetAutorestart(true)}
           >
-            Enable automatic timer restart
+            Zapnout automatické obnovení časovače
           </button>
           <button
             className={formStyles.button}
             onClick={() => sendSetAutorestart(false)}
           >
-            Disable automatic timer restart
+            Vypnout automatické obnovení časovače
           </button>
 
-          <h3>Timings</h3>
+          <h3>Časové limity</h3>
 
           <label className={formStyles.label} htmlFor="turn-time">
-            Normal turn:
+            Normální tah:
           </label>
           <input
             id="turn-time"
@@ -286,7 +286,7 @@ export default function AdminInterface({
           />
 
           <label className={formStyles.label} htmlFor="draw-time">
-            Normal card draw:
+            Normální dobírání:
           </label>
           <input
             id="draw-time"
@@ -297,7 +297,7 @@ export default function AdminInterface({
           />
 
           <label className={formStyles.label} htmlFor="special">
-            Special turn multiplier:
+            Součinitel pro speciální tah:
           </label>
           <input
             id="special"
@@ -308,13 +308,13 @@ export default function AdminInterface({
           />
 
           <button className={formStyles.button} onClick={() => sendTimings()}>
-            Save timings
+            Uložit
           </button>
 
-          <h2>Saves</h2>
+          <h2>Uložené hry</h2>
 
           <label className={formStyles.label} htmlFor="save-name">
-            Save name:
+            Název souboru:
           </label>
 
           <select
@@ -323,7 +323,7 @@ export default function AdminInterface({
             value={name != null ? "s" + name : "new"}
             onChange={(e) => setSaveNameValue(e.target.value)}
           >
-            <option value="new">New game</option>
+            <option value="new">Nová hra</option>
 
             {saveNames.map((name) => (
               <option value={"s" + name} key={name}>
@@ -333,7 +333,7 @@ export default function AdminInterface({
           </select>
 
           <button className={formStyles.button} onClick={() => loadSave()}>
-            Load save
+            Načíst
           </button>
         </div>
       </div>

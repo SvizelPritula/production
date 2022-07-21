@@ -57,11 +57,11 @@ function getSelectionElements(
         />
       );
     case "before_game":
-      return <InfoText>Please wait for game start.</InfoText>;
+      return <InfoText>Prosíme, vyčkejte na zahájení.</InfoText>;
     case "after_game":
-      return <InfoText>Good job!</InfoText>;
+      return <InfoText>Gratuluji!</InfoText>;
     default:
-      return <InfoText>Unknown turn phase</InfoText>;
+      return <InfoText>Neznámý tah</InfoText>;
   }
 }
 
@@ -150,7 +150,7 @@ export default function PlayerInterface({
       shadowState.setMain(selection, true);
     } catch (error) {
       console.error(error);
-      addError("Failed to save selection");
+      addError("Uložení výběru se nezdařilo");
     }
   }
 

@@ -1,8 +1,10 @@
 import headerStyles from "components/Layout.module.css";
 
 export default function OnlineStatus({ online }: { online: boolean }) {
+  var stateText = online ? "Připojeno" : "Nepřipojeno";
+
   return (
-    <div aria-label={online ? "Online" : "Offline"}>
+    <div aria-label={stateText} title={stateText}>
       <svg
         viewBox="0 0 100 100"
         className={headerStyles.icon}

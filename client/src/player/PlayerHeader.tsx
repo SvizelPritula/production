@@ -9,31 +9,31 @@ import LogoutButton from "components/LogoutButton";
 import styles from "player/PlayerHeader.module.css";
 
 function getTurnName(turn: Turn | null): ReactNode {
-  if (turn === null) return "Connecting...";
+  if (turn === null) return "Připojování...";
 
   switch (turn.phase) {
     case "card_draw":
-      return "Drawing cards";
+      return "Dobírání";
 
     case "card_usage":
       return (
         <>
-          Turn <b>{turn.turn + 1}</b>
+          <b>{turn.turn + 1}</b>. tah
         </>
       );
 
     case "before_game":
-      return <>Lobby</>;
+      return <>Generace</>;
 
     case "after_game":
-      return <>Game evaluation</>;
+      return <>Vyhodnocení</>;
 
     default:
-      return "Unknown turn phase";
+      return "Neznámý tah";
   }
 }
 
-export default function AdminHeader({
+export default function PlayerHeader({
   player,
   turn,
   online,
@@ -48,7 +48,7 @@ export default function AdminHeader({
     <>
       <div className={styles.heading}>
         <h1 className={styles.turn}>{getTurnName(turn)}</h1>
-        <div className={styles.player}>{player?.name ?? "Loading..."}</div>
+        <div className={styles.player}>{player?.name ?? "Načítání..."}</div>
       </div>
       <LogoutButton logout={logout} />
       <OnlineStatus online={online} />

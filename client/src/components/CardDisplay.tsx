@@ -36,7 +36,7 @@ export default function CardDisplay({
       style={{ "--card-color": card.color } as any}
       ref={wrapper}
     >
-      <img src={card.image} alt="A card" ref={image} />
+      <img src={card.image} alt="Karta" ref={image} />
     </div>
   );
 }
