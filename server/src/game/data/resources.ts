@@ -5,7 +5,7 @@ import { getRound } from "./chances";
 export const coal: Resource = {
     id: "coal",
     name: "Coal",
-    color: "#502d16",
+    color: "#784421",
     getPointsPerUnit(turn) { return 5; },
     getUnitsPerProducer(turn) {
         return linear_interpolation([

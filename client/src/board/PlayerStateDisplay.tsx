@@ -27,28 +27,28 @@ export default function PlayerStateDisplay({
       </div>
       <div className={styles.info}>
         <div className={styles.resources}>
-          {player.resources.map((resource, column) => (
+          {player.resources.map((resource, row) => (
             <Fragment key={resource.id}>
               <ResourceValueDisplay
                 value={resource.amount}
                 valueType="amount"
                 resource={resourceMap.get(resource.id)!}
-                row={0}
-                column={column}
+                row={row}
+                column={0}
               />
               <ResourceValueDisplay
                 value={resource.production}
                 valueType="production"
                 resource={resourceMap.get(resource.id)!}
-                row={1}
-                column={column}
+                row={row}
+                column={1}
               />
               <ResourceValueDisplay
                 value={resource.usage}
                 valueType="usage"
                 resource={resourceMap.get(resource.id)!}
-                row={2}
-                column={column}
+                row={row}
+                column={2}
               />
             </Fragment>
           ))}

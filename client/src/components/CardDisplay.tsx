@@ -18,16 +18,23 @@ export default function CardDisplay({
     if (image.current === null) return;
     if (wrapper.current === null) return;
 
-    var observer = new ResizeObserver(() => {
+    function update() {
       if (image.current === null) return;
       if (wrapper.current === null) return;
 
       var style = window.getComputedStyle(image.current);
 
-      wrapper.current!.style.width = `calc(${style.width} + ${style.borderRadius})`;
-    });
+      var width = `calc(${style.width} + var(--padding) * 2)`;
+      wrapper.current.style.width = width;
+      console.log(width);
+    }
 
-    observer.observe(image.current);
+    var observer = new ResizeObserver(update);
+    update();
+
+    var imageCurrent = image.current;
+    observer.observe(imageCurrent);
+    return () => observer.unobserve(imageCurrent);
   }, [image, wrapper]);
 
   return (
