@@ -51,5 +51,14 @@ import { SaveManager } from "./saves";
         saves.save(state, game.registry);
     });
 
-    io.listen(5000);
+    var port = 5000;
+
+    if (process.env.PORT != null) {
+        var parsedPort = parseInt(process.env.PORT);
+        if (!isNaN(parsedPort)) {
+            port = parsedPort;
+        }
+    }
+
+    io.listen(port);
 })();
