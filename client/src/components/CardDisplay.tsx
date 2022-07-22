@@ -26,7 +26,6 @@ export default function CardDisplay({
 
       var width = `calc(${style.width} + var(--padding) * 2)`;
       wrapper.current.style.width = width;
-      console.log(width);
     }
 
     var observer = new ResizeObserver(update);
