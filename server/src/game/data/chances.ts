@@ -41,7 +41,7 @@ export const windChance = linear_interpolation([
     [30, 12]
 ]);
 
-export const pointChance = (round: number) => 10;
+export const pointChance = (round: number) => round >= 2 ? 10 : 0;
 
 export const commonChance = 20;
 export const uncommonChance = 12;
