@@ -53,10 +53,10 @@ export const solar: Resource = {
     getUnitsPerProducer(turn) { return 1; },
 };
 
-export const water: Resource = {
-    id: "water",
-    name: "Water",
-    color: "#0066ff",
+export const wind: Resource = {
+    id: "wind",
+    name: "Wind",
+    color: "#3737c8",
     volatile: true,
     getPointsPerUnit(turn) { return 12; },
     getUnitsPerProducer(turn) { return 1; },
@@ -67,5 +67,5 @@ export const resources: Resource[] = [
     gas,
     nuclear,
     solar,
-    water
+    wind
 ];

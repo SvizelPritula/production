@@ -35,8 +35,8 @@ export const solarChance = linear_interpolation([
     [30, 12]
 ]);
 
-export const waterChance = linear_interpolation([
-    [24, 0],
+export const windChance = linear_interpolation([
+    [24, 100],
     [25, 2],
     [30, 12]
 ]);
