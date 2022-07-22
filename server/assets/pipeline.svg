@@ -5,7 +5,7 @@
   <path d="m70 45h-40"/>
   <path d="m70 105h-40"/>
  </g>
- <circle cx="31.25" cy="37.5" r="1.875" fill="#000029"/>
+ <circle cx="31.25" cy="37.5" r="1.875"/>
  <g fill="none" stroke="#000" stroke-width="4">
   <circle cx="50" cy="75" r="12.5" stroke-linecap="square"/>
   <g>
@@ -14,14 +14,12 @@
    <path d="m39.175 68.75 21.651 12.5"/>
   </g>
  </g>
- <g fill="#000029">
+ <g>
   <circle cx="38.75" cy="37.5" r="1.875"/>
   <circle cx="46.25" cy="37.5" r="1.875"/>
   <circle cx="53.75" cy="37.5" r="1.875"/>
   <circle cx="61.25" cy="37.5" r="1.875"/>
   <circle cx="68.75" cy="37.5" r="1.875"/>
- </g>
- <g>
   <circle cx="31.25" cy="112.5" r="1.875"/>
   <circle cx="38.75" cy="112.5" r="1.875"/>
   <circle cx="46.25" cy="112.5" r="1.875"/>

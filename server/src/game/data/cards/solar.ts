@@ -43,7 +43,7 @@ export const solarCards: CardType[] = [
         id: "solar-plant",
         name: "Photovoltaic power plant",
         color: solar.color,
-        image: "solar-plant",
+        image: "solar-panel",
         effect(context) {
             context.addEffect(new AddUsage(context.player, solar, 1));
         },

@@ -24,7 +24,7 @@ export const nuclearCards: CardType[] = [
         id: "reactor",
         name: "Nuclear reactor",
         color: nuclear.color,
-        image: "reactor",
+        image: "plant",
         effect(context) {
             context.addEffect(new AddUsage(context.player, nuclear, 1));
         },
