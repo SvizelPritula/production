@@ -36,7 +36,7 @@ export const solarChance = linear_interpolation([
 ]);
 
 export const windChance = linear_interpolation([
-    [24, 100],
+    [24, 0],
     [25, 2],
     [30, 12]
 ]);
