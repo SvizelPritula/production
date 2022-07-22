@@ -66,7 +66,10 @@ function getSelectionElements(
       return (
         <InfoText>
           <p>Prosím, vyčkejte zahájení hry.</p>
-          <p>Pokuste se získat co nejvíce bodů a vyhrát. Hodně štěstí!</p>
+          <p>
+            Zahrajte nejlepší možné karty, získejte co nejvíce bodů a vyhrajte.
+            Hodně štěstí!
+          </p>
         </InfoText>
       );
     case "after_game":
