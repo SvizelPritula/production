@@ -43,7 +43,7 @@ export const windCards: CardType[] = [
         id: "wind-plant",
         name: "Windmill",
         color: wind.color,
-        image: "windmill",
+        image: "wind-turbine",
         effect(context) {
             context.addEffect(new AddUsage(context.player, wind, 1));
         },
