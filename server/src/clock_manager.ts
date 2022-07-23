@@ -3,8 +3,8 @@ import { specialRounds } from "./game/constants";
 
 export class ClockManager {
   restartAfterTurn: boolean = true;
-  timeForTurn: number = 5 * 1000;
-  timeForCardDraw: number = 10 * 1000;
+  timeForTurn: number = 15 * 1000;
+  timeForCardDraw: number = 30 * 1000;
   specialTurnMultiplier: number = 2;
 
   private getMultiplier(round: number): number {
