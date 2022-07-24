@@ -4,25 +4,25 @@ export const players: Player[] = [
     {
         id: "red",
         name: "Červení",
-        code: "kolej",
-        cardSeed: 0
+        code: "epopej",
+        cardSeed: 100
     },
     {
         id: "green",
         name: "Zelení",
-        code: "malina",
-        cardSeed: 1
+        code: "prion",
+        cardSeed: 100
     },
     {
         id: "blue",
         name: "Modří",
-        code: "koleda",
-        cardSeed: 2
+        code: "export",
+        cardSeed: 100
     },
     {
         id: "yellow",
         name: "Žlutí",
-        code: "balet",
-        cardSeed: 3
+        code: "lidojed",
+        cardSeed: 100
     }
 ];
