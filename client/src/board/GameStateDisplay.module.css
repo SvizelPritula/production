@@ -49,6 +49,7 @@
 .card {
   margin: auto 0;
   height: 75%;
+  max-height: 40vh;
 }
 
 .resource {
