@@ -29,7 +29,7 @@ export default function CardDisplay({
     }
 
     var observer = new ResizeObserver(update);
-    update();
+    requestAnimationFrame(update);
 
     var imageCurrent = image.current;
     observer.observe(imageCurrent);
